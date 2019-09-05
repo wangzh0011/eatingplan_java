@@ -8,11 +8,15 @@
 
 package io.renren;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 
 
+@ServletComponentScan
 @SpringBootApplication
+@MapperScan(basePackages = {"io.renren.modules.*.dao"})
 public class AdminApplication {
 
 	public static void main(String[] args) {
