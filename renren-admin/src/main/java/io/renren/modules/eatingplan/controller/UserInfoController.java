@@ -24,7 +24,7 @@ public class UserInfoController {
      * @return
      */
     @RequestMapping("/login")
-    public Object login(@PathVariable String code){
+    public Object login(String code){
 
         //请求url
         String url = Constant.OpenIdUrl.replace("JSCODE",code);
