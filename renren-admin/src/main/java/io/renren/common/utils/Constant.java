@@ -122,12 +122,22 @@ public class Constant {
 
     /**小程序相关信息**/
     //appid
-    private static String AppId ="wx8cd99af08e68c321";
+    public static String AppId ="wx8cd99af08e68c321";
     //appsecret
-    private static String AppSecret="70291e53a0ef667cef5b48fc19bba68d";
+    public static String AppSecret="70291e53a0ef667cef5b48fc19bba68d";
+    //mch_id
+    public static String mchId = "";
+    //key
+    public static String key = "";
+    //通知地址
+    public static String notifyUrl = "";
+    //交易类型
+    public static String tradeType = "JSAPI";
+
 
     public final static String OpenIdUrl = "https://api.weixin.qq.com/sns/jscode2session?appid="+AppId+"&secret="+AppSecret+"&js_code=JSCODE&grant_type=authorization_code";
     public final static String TokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId+"&secret="+AppSecret;
     public final static String templateUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=ACCESS_TOKEN";
+    public final static String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单url
 
 }
