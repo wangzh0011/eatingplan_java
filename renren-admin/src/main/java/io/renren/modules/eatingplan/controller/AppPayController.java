@@ -1,8 +1,8 @@
 package io.renren.modules.eatingplan.controller;
 
-import io.renren.common.utils.Constant;
-import io.renren.common.utils.IPUtils;
-import io.renren.common.utils.MD5Util;
+import ch.qos.logback.core.joran.spi.XMLUtil;
+import com.alibaba.fastjson.JSON;
+import io.renren.common.utils.*;
 import io.renren.modules.eatingplan.entity.PayParameter;
 import io.renren.modules.eatingplan.entity.UnifiedorderParameter;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,7 +25,8 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/eatingplan")
-public class AppPayController {
+public class AppPayController extends BaseController{
+
 
     @RequestMapping("/pay")
     public Object getPayParameter(String openId, HttpServletRequest request){
@@ -45,18 +47,29 @@ public class AppPayController {
         unifiedorder.setTrade_type(Constant.tradeType);
         unifiedorder.setOpenid(openId);
         //获取统一下单参数xml
-        String unifiedorderXml = getUnifiedorder(unifiedorder,Constant.key);
+        String unifiedorderXml = getUnifiedorder(unifiedorder);
+        log.info("统一下单参数xml==============>>" + unifiedorderXml);
         String payUrl = Constant.unifiedorderUrl;
         //请求统一下单接口
+        String prepayId = null;
+        try {
+            String xmlStr = HttpUtil.doPostToStr(payUrl,unifiedorderXml);
+            log.info("调用统一接口返回结果：" + xmlStr);
+            prepayId = (String) JSON.parseObject(xmlStr, Map.class).get("prepay_id");
+            log.info("prepayId:" + prepayId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //获取小程序调取支付接口所需参数
         PayParameter pay = new PayParameter();
         pay.setNonceStr(nonceStr);
-        pay.setPackage_pay("");
+        pay.setPackage_pay(prepayId);
         pay.setSingTpye("MD5");
         pay.setTimeStamp(timeStamp);
 
-        pay = getPayRequestParameter(pay,Constant.key);
+        pay = getPayRequestParameter(pay);
 
         return pay;
     }
@@ -67,7 +80,7 @@ public class AppPayController {
      * @param key
      * @return
      */
-    public PayParameter getPayRequestParameter(PayParameter pay, String key){
+    public PayParameter getPayRequestParameter(PayParameter pay){
 
         SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();
 
@@ -88,7 +101,7 @@ public class AppPayController {
      * @param order
      * @return
      */
-    public String getUnifiedorder(UnifiedorderParameter order,String key){
+    public String getUnifiedorder(UnifiedorderParameter order){
 
         SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();
 
@@ -102,8 +115,8 @@ public class AppPayController {
         parameters.put("spbill_create_ip", order.getSpbill_create_ip());
         parameters.put("total_fee", order.getTotal_fee());
         parameters.put("trade_type", order.getTrade_type());
-        String sign = createPaySign(parameters,key);
 
+        String xml = null;
         /**转换成xml格式**/
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -113,21 +126,53 @@ public class AppPayController {
             document.setXmlStandalone(true);
             Element element = document.createElement("xml");
             document.appendChild(element);
+
+            /**xml子元素**/
             Element appid = document.createElement("appid");
             appid.setTextContent(order.getAppid());
+            element.appendChild(appid);
+
             Element body = document.createElement("body");
             body.setTextContent(order.getBody());
-            Element mch_id = document.createElement("mch_id");
-            Element nonce_str = document.createElement("nonce_str");
-            Element notify_url = document.createElement("notify_url");
-            Element openid = document.createElement("appid");
-            Element out_trade_no = document.createElement("out_trade_no");
-            Element spbill_create_ip = document.createElement("spbill_create_ip");
-            Element total_fee = document.createElement("total_fee");
-            Element trade_type = document.createElement("trade_type");
-            Element sign = document.createElement("sign");
+            element.appendChild(body);
 
-            element.appendChild(appid);
+            Element mch_id = document.createElement("mch_id");
+            mch_id.setTextContent(order.getMch_id());
+            element.appendChild(mch_id);
+
+            Element nonce_str = document.createElement("nonce_str");
+            nonce_str.setTextContent(order.getNonce_str());
+            element.appendChild(nonce_str);
+
+            Element notify_url = document.createElement("notify_url");
+            notify_url.setTextContent(order.getNotify_url());
+            element.appendChild(notify_url);
+
+            Element openid = document.createElement("openid");
+            openid.setTextContent(order.getOpenid());
+            element.appendChild(openid);
+
+            Element out_trade_no = document.createElement("out_trade_no");
+            out_trade_no.setTextContent(order.getOut_trade_no());
+            element.appendChild(out_trade_no);
+
+            Element spbill_create_ip = document.createElement("spbill_create_ip");
+            spbill_create_ip.setTextContent(order.getSpbill_create_ip());
+            element.appendChild(spbill_create_ip);
+
+            Element total_fee = document.createElement("total_fee");
+            total_fee.setTextContent(String.valueOf(order.getTotal_fee()));
+            element.appendChild(total_fee);
+
+            Element trade_type = document.createElement("trade_type");
+            trade_type.setTextContent(order.getTrade_type());
+            element.appendChild(trade_type);
+
+            Element sign = document.createElement("sign");
+            sign.setTextContent(createPaySign(parameters,Constant.key));
+            element.appendChild(sign);
+            /**xml子元素**/
+
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -136,9 +181,9 @@ public class AppPayController {
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             transformer.transform(domSource, new StreamResult(bos));
-            String xml = bos.toString(Charset.forName("utf-8"));
-            System.out.print(xml);
-
+            xml = bos.toString(Charset.forName("utf-8"));
+            xml = xml.substring(xml.indexOf("<",1));
+            log.info(xml);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (TransformerConfigurationException e) {
@@ -147,7 +192,7 @@ public class AppPayController {
             e.printStackTrace();
         }
 
-        return "";
+        return xml;
     }
 
 
@@ -189,6 +234,7 @@ public class AppPayController {
     }
 
     public static void main(String[] args){
+
 
     }
 }

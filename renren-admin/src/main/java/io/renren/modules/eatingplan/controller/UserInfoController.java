@@ -3,10 +3,7 @@ package io.renren.modules.eatingplan.controller;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.utils.Constant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -15,8 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/eatingplan")
-public class UserInfoController {
-    private Logger log = LoggerFactory.getLogger(getClass());
+public class UserInfoController extends BaseController{
 
     /**
      * 登录

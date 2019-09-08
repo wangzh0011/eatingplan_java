@@ -101,7 +101,24 @@
             <version>4.0.0</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+
+		<!-- 发送HTTP请求 -->
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/fluent-hc -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+
+		<!-- net.sf.json.JSONObject 相关jsOn转化 -->
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
