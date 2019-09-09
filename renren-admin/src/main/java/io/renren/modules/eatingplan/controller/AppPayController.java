@@ -1,6 +1,5 @@
 package io.renren.modules.eatingplan.controller;
 
-import ch.qos.logback.core.joran.spi.XMLUtil;
 import com.alibaba.fastjson.JSON;
 import io.renren.common.utils.*;
 import io.renren.modules.eatingplan.entity.PayParameter;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,7 +38,7 @@ public class AppPayController extends BaseController{
         unifiedorder.setMch_id(Constant.mchId);
         unifiedorder.setNonce_str(nonceStr);
         unifiedorder.setBody("健康饮食计划");
-        unifiedorder.setOut_trade_no(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + (Math.random()*899+100));
+        unifiedorder.setOut_trade_no(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + Math.round(Math.random()*899+100));
         unifiedorder.setTotal_fee(1);
         unifiedorder.setSpbill_create_ip(IPUtils.getIpAddr(request));
         unifiedorder.setNotify_url(Constant.notifyUrl);
@@ -77,7 +75,6 @@ public class AppPayController extends BaseController{
     /**
      * 获取小程序所需参数
      * @param pay
-     * @param key
      * @return
      */
     public PayParameter getPayRequestParameter(PayParameter pay){
@@ -183,7 +180,6 @@ public class AppPayController extends BaseController{
             transformer.transform(domSource, new StreamResult(bos));
             xml = bos.toString(Charset.forName("utf-8"));
             xml = xml.substring(xml.indexOf("<",1));
-            log.info(xml);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (TransformerConfigurationException e) {
