@@ -26,6 +26,12 @@ import java.util.*;
 public class AppPayController extends BaseController{
 
 
+    /**
+     * 发起支付
+     * @param openId
+     * @param request
+     * @return
+     */
     @RequestMapping("/pay")
     public Object getPayParameter(String openId, HttpServletRequest request){
 
