@@ -89,11 +89,11 @@ var vm = new Vue({
 		}
 	},
 	methods: {
-		refreshCode: function(){
-			this.src = "captcha.jpg?t=" + $.now();
-		},
+		// refreshCode: function(){
+		// 	this.src = "captcha.jpg?t=" + $.now();
+		// },
 		login: function (event) {
-			var data = "username="+vm.username+"&password="+vm.password+"&captcha="+vm.captcha;
+			var data = "username="+vm.username+"&password="+vm.password;
 			$.ajax({
 				type: "POST",
 			    url: "sys/login",
@@ -106,7 +106,7 @@ var vm = new Vue({
 						vm.error = true;
 						vm.errorMsg = result.msg;
 						
-						vm.refreshCode();
+						// vm.refreshCode();
 					}
 				}
 			});
