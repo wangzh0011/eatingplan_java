@@ -1,5 +1,9 @@
 package io.renren.modules.eatingplan.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.modules.sys.entity.FoodsEntity;
+import io.renren.modules.sys.service.FoodsConfService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,30 +13,16 @@ import java.util.List;
 @RequestMapping("/eatingplan")
 public class FoodsInfoController {
 
-    /**
-     * 获取早餐数据
-     * @return
-     */
-    @RequestMapping("/breakfast")
-    public List getBreakfast() {
-        return null;
-    }
+    @Autowired
+    private FoodsConfService foodsConfService;
 
     /**
-     * 获取午餐数据
+     * 根据类型获取早，中，晚餐数据
      * @return
      */
-    @RequestMapping("/lunch")
-    public List getLunch() {
-        return null;
-    }
-
-    /**
-     * 获取晚餐数据
-     * @return
-     */
-    @RequestMapping("/dinner")
-    public List getDinner() {
-        return null;
+    @RequestMapping("/foods")
+    public List getFoods(String type) {
+        List<FoodsEntity> foodsList = foodsConfService.list(new QueryWrapper<FoodsEntity>().eq("type",type));
+        return foodsList;
     }
 }

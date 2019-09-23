@@ -1,9 +1,14 @@
 package io.renren.modules.sys.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 
+@TableName("FOODS_ENTITY")
 public class FoodsEntity implements Serializable {
 
+    @TableId
     private Long id;
 
     private String name;//食物名

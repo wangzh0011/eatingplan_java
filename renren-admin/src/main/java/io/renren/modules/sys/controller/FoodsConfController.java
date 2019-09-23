@@ -63,14 +63,14 @@ public class FoodsConfController {
 
         file.transferTo(dest);
 
-        FoodsEntity foodsEntity = new FoodsEntity();
-        foodsEntity.setImgUrl(location + fileName);//服务器路径
-        foodsEntity.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        foodsConfService.saveOrUpdate(foodsEntity);
+//        FoodsEntity foodsEntity = new FoodsEntity();
+//        foodsEntity.setImgUrl(location + fileName);//服务器路径
+//        foodsEntity.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+//        foodsConfService.saveOrUpdate(foodsEntity);
 
         url = url + fileName;
 
-        return  R.ok().put("url", url);
+        return  R.ok().put("url", location + fileName);
     }
 
     /**
@@ -79,9 +79,9 @@ public class FoodsConfController {
     @RequestMapping("/info/{id}")
     @ResponseBody
     public R info(@PathVariable("id") Long id){
-        FoodsEntity config = foodsConfService.getById(id);
+        FoodsEntity foods = foodsConfService.getById(id);
 
-        return R.ok().put("config", config);
+        return R.ok().put("foods", foods);
     }
 
     /**
@@ -89,10 +89,13 @@ public class FoodsConfController {
      */
     @SysLog("保存配置")
     @RequestMapping("/save")
-    public R save(@RequestBody FoodsEntity config){
-        ValidatorUtils.validateEntity(config);
+    public R save(@RequestBody FoodsEntity foods){
 
-        foodsConfService.saveConfig(config);
+        foods.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+
+        ValidatorUtils.validateEntity(foods);
+
+        foodsConfService.saveConfig(foods);
 
         return R.ok();
     }
@@ -102,10 +105,10 @@ public class FoodsConfController {
      */
     @SysLog("修改配置")
     @RequestMapping("/update")
-    public R update(@RequestBody FoodsEntity config){
-        ValidatorUtils.validateEntity(config);
+    public R update(@RequestBody FoodsEntity foods){
+        ValidatorUtils.validateEntity(foods);
 
-        foodsConfService.update(config);
+        foodsConfService.update(foods);
 
         return R.ok();
     }

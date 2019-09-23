@@ -35,7 +35,6 @@ public class FoodsConfServiceImpl extends ServiceImpl<FoodsConfDao, FoodsEntity>
 			new Query<FoodsEntity>().getPage(params),
 			new QueryWrapper<FoodsEntity>()
 				.like(StringUtils.isNotBlank(paramKey),"param_key", paramKey)
-				.eq("status", 1)
 		);
 
 		return new PageUtils(page);

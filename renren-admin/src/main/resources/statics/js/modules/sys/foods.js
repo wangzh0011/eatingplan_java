@@ -5,7 +5,10 @@ $(function () {
         colModel: [			
 			{ label: 'ID', name: 'id', width: 30, key: true },
 			{ label: '食物名', name: 'name', sortable: false, width: 60 },
-			{ label: '图片路径', name: 'imgUrl', width: 100 },
+            { label: '类型', name: 'type', sortable: false, width: 60 },
+			{ label: '图片路径', name: 'imgUrl', width: 100, formatter: function (value,options,row) {
+				return "<img src='" + value + "' />"
+                }},
 			{ label: '热量', name: 'heat', width: 80 },
             { label: '重量', name: 'weight', width: 80 }
         ],
@@ -53,8 +56,8 @@ $(function () {
         },
         onComplete : function(file, r){
             if(r.code == 0){
-                alert(r.url);
-                vm.reload();
+            	vm.foods.imgUrl = r.url;
+                alert("上传成功，保存路径为" + r.url);
             }else{
                 alert(r.msg);
             }
@@ -71,7 +74,10 @@ var vm = new Vue({
 		},
 		showList: true,
 		title: null,
-		config: {}
+		foods: {
+            imgUrl: ''
+		},
+
 	},
 	methods: {
 		query: function () {
@@ -80,7 +86,7 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.config = {};
+			vm.foods = {};
 		},
 		update: function () {
 			var id = getSelectedRow();
@@ -91,7 +97,7 @@ var vm = new Vue({
 			$.get(baseURL + "sys/foods/info/"+id, function(r){
                 vm.showList = false;
                 vm.title = "修改";
-                vm.config = r.config;
+                vm.foods = r.foods;
             });
 		},
 		del: function (event) {
@@ -119,12 +125,12 @@ var vm = new Vue({
 			});
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.config.id == null ? "sys/foods/save" : "sys/foods/update";
+			var url = vm.foods.id == null ? "sys/foods/save" : "sys/foods/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
                 contentType: "application/json",
-			    data: JSON.stringify(vm.config),
+			    data: JSON.stringify(vm.foods),
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
