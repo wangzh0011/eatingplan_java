@@ -6,8 +6,8 @@ $(function () {
 			{ label: 'ID', name: 'id', width: 30, key: true },
 			{ label: '食物名', name: 'name', sortable: false, width: 60 },
             { label: '类型', name: 'type', sortable: false, width: 60 },
-			{ label: '图片路径', name: 'imgUrl', width: 100, formatter: function (value,options,row) {
-				return "<img src='" + value + "' />"
+			{ label: '图片', name: 'imgUrl', width: 100, formatter: function (value,options,row) {
+				return "<img src='" + value + "' style='width: 40px; height: 40px' />"
                 }},
 			{ label: '热量', name: 'heat', width: 80 },
             { label: '重量', name: 'weight', width: 80 }
@@ -57,6 +57,7 @@ $(function () {
         onComplete : function(file, r){
             if(r.code == 0){
             	vm.foods.imgUrl = r.url;
+            	vm.add();
                 alert("上传成功，保存路径为" + r.url);
             }else{
                 alert(r.msg);
@@ -75,7 +76,7 @@ var vm = new Vue({
 		showList: true,
 		title: null,
 		foods: {
-            imgUrl: ''
+            imgUrl: null
 		},
 
 	},
@@ -86,7 +87,7 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.foods = {};
+            vm.foods = this.foods;
 		},
 		update: function () {
 			var id = getSelectedRow();

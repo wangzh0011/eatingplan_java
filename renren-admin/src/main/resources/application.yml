@@ -10,7 +10,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: test
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -65,3 +65,9 @@ mybatis-plus:
     cache-enabled: false
     call-setters-on-nulls: true
     jdbc-type-for-null: 'null'
+
+  logging:
+    level: debug
+    level.io.renren: debug
+    path: logs/
+    file: admin.log

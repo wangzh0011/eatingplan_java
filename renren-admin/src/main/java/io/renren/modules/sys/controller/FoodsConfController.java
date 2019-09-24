@@ -7,6 +7,7 @@ import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.sys.entity.FoodsEntity;
 import io.renren.modules.sys.service.FoodsConfService;
+import io.renren.modules.sys.service.SysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class FoodsConfController {
 
     @Autowired
     private FoodsConfService foodsConfService;
+
+    @Autowired
+    private SysConfigService sysConfigService;
 
     @Value("${img.location}")
     private String location;
@@ -44,9 +48,9 @@ public class FoodsConfController {
      */
     @RequestMapping("/upload")
     public R upload(@RequestParam("file") MultipartFile file) throws Exception {
-//		String url = sysConfigService.getValue("uploadUrl");
-        String url = "http://127.0.0.1:8080/upload";
-        String size = String.valueOf(file.getSize()/1024) + "K";
+		String url = sysConfigService.getValue("uploadUrl");
+//        String url = "http://127.0.0.1:8080/upload";
+//        String size = String.valueOf(file.getSize()/1024) + "K";
 
         if (file.isEmpty()) {
             throw new RRException("上传文件不能为空");
@@ -70,7 +74,7 @@ public class FoodsConfController {
 
         url = url + fileName;
 
-        return  R.ok().put("url", location + fileName);
+        return  R.ok().put("url", url);
     }
 
     /**
