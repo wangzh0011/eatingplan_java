@@ -46,16 +46,34 @@ public class UserInfoController extends BaseController{
         //保存openID到数据库  创建用户
         List<Users> users = usersInfoService.query(openId);
         Users user = new Users();
-        if (users.size() == 0) {
-            user.setOpenid(openId);
-            usersInfoService.save(user);
-            //查询新增用户的id
-            user.setId(usersInfoService.query(openId).get(0).getId());
-        }else {
+        if (users.size() > 0) {
             user = users.get(0);
+        }else {
+            user.setOpenid(openId);
+//            usersInfoService.save(user);
+//            //查询新增用户的id
+//            user.setId(usersInfoService.query(openId).get(0).getId());
         }
 
         return user;
+    }
+
+
+    /**
+     * 注册
+     * @param openid
+     */
+    @RequestMapping("/register")
+    public void registerUser(String openid) {
+        //注册之前查看系统是否已注册该用户
+        List<Users> users = usersInfoService.query(openid);
+        if(users.size() > 0) {
+            log.info("系统中已注册过openid为【" + openid + "】的用户");
+            return;
+        }
+        Users user = new Users();
+        user.setOpenid(openid);
+        usersInfoService.save(user);
     }
 
 

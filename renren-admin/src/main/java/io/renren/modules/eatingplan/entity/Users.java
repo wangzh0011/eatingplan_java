@@ -1,7 +1,12 @@
 package io.renren.modules.eatingplan.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+@TableName("users")
 public class Users {
 
+    @TableId
     private Long id;
 
     private String openid;

@@ -11,28 +11,31 @@ package io.renren.modules.eatingplan.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.modules.eatingplan.dao.UsersInfoDao;
+import io.renren.modules.eatingplan.dao.WxAppShareInfoDao;
 import io.renren.modules.eatingplan.entity.Users;
+import io.renren.modules.eatingplan.entity.WxAppShareInfo;
 import io.renren.modules.eatingplan.service.UsersInfoService;
+import io.renren.modules.eatingplan.service.WxAppShareInfoService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class UsersInfoServiceImpl extends ServiceImpl<UsersInfoDao, Users> implements UsersInfoService {
+public class WxAppShareInfoServiceImpl extends ServiceImpl<WxAppShareInfoDao, WxAppShareInfo> implements WxAppShareInfoService {
 
 
 	@Override
-	public List<Users> query(String openid) {
+	public List<WxAppShareInfo> query(Long shareuid) {
 
-		List<Users> user = baseMapper.selectList(new QueryWrapper<Users>().eq("openid",openid));
+		List<WxAppShareInfo> shareInfos = baseMapper.selectList(new QueryWrapper<WxAppShareInfo>().eq("shareuid",shareuid));
 
-		return user;
+		return shareInfos;
 	}
 
 	@Override
-	public boolean save(Users user) {
-		baseMapper.insert(user);
+	public boolean save(WxAppShareInfo shareInfo) {
+		baseMapper.insert(shareInfo);
 		return true;
 	}
 

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("wxapp_shareview")
-public class WxappShareInfo {
+public class WxAppShareInfo {
 
     @TableId
     private Long id;
@@ -95,5 +95,20 @@ public class WxappShareInfo {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    @Override
+    public String toString() {
+        return "WxAppShareInfo{" +
+                "id=" + id +
+                ", uid=" + uid +
+                ", shareuid=" + shareuid +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", system='" + system + '\'' +
+                ", pixelRatio='" + pixelRatio + '\'' +
+                ", language='" + language + '\'' +
+                ", version='" + version + '\'' +
+                '}';
     }
 }
