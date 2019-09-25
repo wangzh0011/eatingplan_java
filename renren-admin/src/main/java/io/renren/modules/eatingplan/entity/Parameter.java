@@ -1,5 +1,8 @@
 package io.renren.modules.eatingplan.entity;
 
+/**
+ * 小程序界面参数
+ */
 public class Parameter {
 
     private String RMB;

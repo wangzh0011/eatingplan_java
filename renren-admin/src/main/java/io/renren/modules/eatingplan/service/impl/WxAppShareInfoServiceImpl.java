@@ -34,6 +34,14 @@ public class WxAppShareInfoServiceImpl extends ServiceImpl<WxAppShareInfoDao, Wx
 	}
 
 	@Override
+	public List<WxAppShareInfo> query(Long shareuid, String ispay) {
+		List<WxAppShareInfo> shareInfos = baseMapper.selectList(new QueryWrapper<WxAppShareInfo>().eq("shareuid",shareuid)
+				.eq("is_pay",ispay));
+
+		return shareInfos;
+	}
+
+	@Override
 	public boolean save(WxAppShareInfo shareInfo) {
 		baseMapper.insert(shareInfo);
 		return true;

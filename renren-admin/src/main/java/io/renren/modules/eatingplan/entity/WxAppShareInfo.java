@@ -19,11 +19,15 @@ public class WxAppShareInfo {
 
     private String system; //操作系统版本
 
-    private String pixelRatio;//设备像素比
+    private String pixelratio;//设备像素比
 
     private String language;//微信设置的语言
 
     private String version; //微信版本号
+
+    private String isPay; //Y  已支付  N 未支付
+
+    private String payId; //支付id
 
     public Long getId() {
         return id;
@@ -73,12 +77,28 @@ public class WxAppShareInfo {
         this.system = system;
     }
 
-    public String getPixelRatio() {
-        return pixelRatio;
+    public String getPixelratio() {
+        return pixelratio;
     }
 
-    public void setPixelRatio(String pixelRatio) {
-        this.pixelRatio = pixelRatio;
+    public void setPixelratio(String pixelratio) {
+        this.pixelratio = pixelratio;
+    }
+
+    public String getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(String isPay) {
+        this.isPay = isPay;
+    }
+
+    public String getPayId() {
+        return payId;
+    }
+
+    public void setPayId(String payId) {
+        this.payId = payId;
     }
 
     public String getLanguage() {
@@ -106,7 +126,7 @@ public class WxAppShareInfo {
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
                 ", system='" + system + '\'' +
-                ", pixelRatio='" + pixelRatio + '\'' +
+                ", pixelRatio='" + pixelratio + '\'' +
                 ", language='" + language + '\'' +
                 ", version='" + version + '\'' +
                 '}';

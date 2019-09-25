@@ -64,16 +64,18 @@ public class UserInfoController extends BaseController{
      * @param openid
      */
     @RequestMapping("/register")
-    public void registerUser(String openid) {
+    public Users registerUser(String openid) {
         //注册之前查看系统是否已注册该用户
         List<Users> users = usersInfoService.query(openid);
         if(users.size() > 0) {
             log.info("系统中已注册过openid为【" + openid + "】的用户");
-            return;
+            return null;
         }
         Users user = new Users();
         user.setOpenid(openid);
-        usersInfoService.save(user);
+        usersInfoService.save(user);//保存user信息
+        user.setId(usersInfoService.query(openid).get(0).getId());
+        return user;
     }
 
 
