@@ -36,10 +36,10 @@ public class UsersInfoServiceImpl extends ServiceImpl<UsersInfoDao, Users> imple
 		return true;
 	}
 
-
-
-
-
+	@Override
+	public void update(Users user) {
+		baseMapper.updateById(user);
+	}
 
 
 }

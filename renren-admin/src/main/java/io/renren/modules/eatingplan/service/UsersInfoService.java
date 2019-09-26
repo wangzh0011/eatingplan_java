@@ -15,4 +15,6 @@ public interface UsersInfoService extends IService<Users> {
      */
     boolean save(Users user);
 
+    void update(Users user);
+
 }

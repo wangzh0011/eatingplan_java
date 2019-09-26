@@ -15,6 +15,36 @@ public class Users {
 
     private String nickName;
 
+    private String type; //用户登录来源  jk 健康计划  fq  赚番茄
+
+    private Long jkId; //来源为健康计划的userID
+
+    private Long fqId; //来源为赚番茄的userID
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getJkId() {
+        return jkId;
+    }
+
+    public void setJkId(Long jkId) {
+        this.jkId = jkId;
+    }
+
+    public Long getFqId() {
+        return fqId;
+    }
+
+    public void setFqId(Long fqId) {
+        this.fqId = fqId;
+    }
+
     public Long getId() {
         return id;
     }

@@ -122,9 +122,9 @@ public class Constant {
 
     /**小程序相关信息**/
     //appid
-    public static String AppId ="wx8cd99af08e68c321";
+    public static String AppId ="wxf818611b94a0c6fe";
     //appsecret
-    public static String AppSecret="70291e53a0ef667cef5b48fc19bba68d";
+    public static String AppSecret="81c3060c59c643a6a4521cb16f478d0b";
     //mch_id
     public static String mchId = "";
     //key
