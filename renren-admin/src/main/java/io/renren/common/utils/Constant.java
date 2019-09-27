@@ -122,9 +122,13 @@ public class Constant {
 
     /**小程序相关信息**/
     //appid
-    public static String AppId ="wxf818611b94a0c6fe";
+    public static String AppId_JK ="wxf818611b94a0c6fe";
     //appsecret
-    public static String AppSecret="81c3060c59c643a6a4521cb16f478d0b";
+    public static String AppSecret_JK="81c3060c59c643a6a4521cb16f478d0b";
+    //appid
+    public static String AppId_FQ ="wx18a384bbb3417f19";
+    //appsecret
+    public static String AppSecret_FQ="1ff8f683f886a58c1dbdb971cfc6b96d";
     //mch_id
     public static String mchId = "";
     //key
@@ -135,8 +139,10 @@ public class Constant {
     public static String tradeType = "JSAPI";
 
 
-    public final static String OpenIdUrl = "https://api.weixin.qq.com/sns/jscode2session?appid="+AppId+"&secret="+AppSecret+"&js_code=JSCODE&grant_type=authorization_code";
-    public final static String TokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId+"&secret="+AppSecret;
+    public final static String OpenIdUrl_JK = "https://api.weixin.qq.com/sns/jscode2session?appid="+AppId_JK+"&secret="+AppSecret_JK+"&js_code=JSCODE&grant_type=authorization_code";
+    public final static String TokenUrl_JK = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId_JK+"&secret="+AppSecret_JK;
+    public final static String OpenIdUrl_FQ = "https://api.weixin.qq.com/sns/jscode2session?appid="+AppId_FQ+"&secret="+AppSecret_FQ+"&js_code=JSCODE&grant_type=authorization_code";
+    public final static String TokenUrl_FQ = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId_FQ+"&secret="+AppSecret_FQ;
     public final static String templateUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=ACCESS_TOKEN";
     public final static String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单url
 
