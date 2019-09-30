@@ -40,7 +40,7 @@ public class AppPayController extends BaseController{
 
         //设置统一下单参数
         UnifiedorderParameter unifiedorder = new UnifiedorderParameter();
-        unifiedorder.setAppid(Constant.AppId);
+        unifiedorder.setAppid(Constant.AppId_JK);
         unifiedorder.setMch_id(Constant.mchId);
         unifiedorder.setNonce_str(nonceStr);
         unifiedorder.setBody("健康饮食计划");
@@ -87,7 +87,7 @@ public class AppPayController extends BaseController{
 
         SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();
 
-        parameters.put("appId", Constant.AppId);
+        parameters.put("appId", Constant.AppId_JK);
         parameters.put("timeStamp", pay.getTimeStamp());
         parameters.put("nonceStr", pay.getNonceStr());
         parameters.put("package", pay.getPackage_pay());

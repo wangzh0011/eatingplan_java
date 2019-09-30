@@ -138,6 +138,9 @@ public class Constant {
     //交易类型
     public static String tradeType = "JSAPI";
 
+    //请求微信接口的方式
+    public final static String POST = "POST";
+    public final static String GET = "GET";
 
     public final static String OpenIdUrl_JK = "https://api.weixin.qq.com/sns/jscode2session?appid="+AppId_JK+"&secret="+AppSecret_JK+"&js_code=JSCODE&grant_type=authorization_code";
     public final static String TokenUrl_JK = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId_JK+"&secret="+AppSecret_JK;
@@ -145,5 +148,9 @@ public class Constant {
     public final static String TokenUrl_FQ = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId_FQ+"&secret="+AppSecret_FQ;
     public final static String templateUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=ACCESS_TOKEN";
     public final static String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单url
-
+    //获取小程序码url
+    //https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=ACCESS_TOKEN
+    //https://api.weixin.qq.com/wxa/getwxacode?access_token=ACCESS_TOKEN
+    //https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=ACCESS_TOKEN
+    public final static String WXACODE_URL = "https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=ACCESS_TOKEN";
 }

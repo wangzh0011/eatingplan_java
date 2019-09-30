@@ -2,6 +2,7 @@ package io.renren.modules.eatingplan.controller;
 
 import com.alibaba.fastjson.JSON;
 import io.renren.common.utils.Constant;
+import io.renren.common.utils.RequestWeixinApi;
 import io.renren.modules.eatingplan.entity.Users;
 import io.renren.modules.eatingplan.service.UsersInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +31,12 @@ public class UserInfoController extends BaseController{
         String url = null;
         if("JK".equals(type)){
             //请求url
-            url = Constant.OpenIdUrl.replace("JSCODE",code);
+            url = Constant.OpenIdUrl_JK.replace("JSCODE",code);
         }else if("FQ".equals(type)){
-            url = "";
+            url = Constant.OpenIdUrl_FQ.replace("JSCODE",code);
         }
 
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        //设置超时
-        requestFactory.setConnectTimeout(5000);
-
-        RestTemplate restTemplate = new RestTemplate(requestFactory);
-        String result = restTemplate.getForObject(url,String.class);
+        String result = (String) RequestWeixinApi.requestApi(url,Constant.GET,null);
 
         //获取openid
         String openId = (String) JSON.parseObject(result, Map.class).get("openid");
