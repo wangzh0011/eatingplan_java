@@ -172,7 +172,7 @@ public class AppPayController extends BaseController{
             element.appendChild(trade_type);
 
             Element sign = document.createElement("sign");
-            sign.setTextContent(createPaySign(parameters,Constant.key));
+            sign.setTextContent(createPaySign(parameters,Constant.key));//签名
             element.appendChild(sign);
             /**xml子元素**/
 

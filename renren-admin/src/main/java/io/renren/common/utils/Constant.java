@@ -130,11 +130,11 @@ public class Constant {
     //appsecret
     public static String AppSecret_FQ="1ff8f683f886a58c1dbdb971cfc6b96d";
     //mch_id
-    public static String mchId = "";
+    public static String mchId = "1557690121";
     //key
     public static String key = "";
     //通知地址
-    public static String notifyUrl = "";
+    public static String notifyUrl = "https://fangqie.top";
     //交易类型
     public static String tradeType = "JSAPI";
 
@@ -152,5 +152,5 @@ public class Constant {
     //https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=ACCESS_TOKEN
     //https://api.weixin.qq.com/wxa/getwxacode?access_token=ACCESS_TOKEN
     //https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=ACCESS_TOKEN
-    public final static String WXACODE_URL = "https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=ACCESS_TOKEN";
+    public final static String WXACODE_URL = "https://api.weixin.qq.com/wxa/getwxacode?access_token=ACCESS_TOKEN";
 }

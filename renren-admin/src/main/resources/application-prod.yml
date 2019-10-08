@@ -35,4 +35,4 @@ spring:
 
   #图片上传路径
 img:
-  location: /app/images/
+  location: /apps/fanqie/images/

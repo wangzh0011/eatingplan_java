@@ -5,17 +5,32 @@ import com.alibaba.fastjson.JSONObject;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.RequestWeixinApi;
 import io.renren.modules.eatingplan.entity.WxCodeUnlimitedResponse;
+import io.renren.modules.sys.service.SysConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.Buffer;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/eatingplan")
 public class QcCodeController extends BaseController{
 
+    @Value("${img.location}")
+    private String location;
+
+    @Autowired
+    private SysConfigService sysConfigService;
+
     @RequestMapping("/getWxacode")
-    public Buffer getWxacode(String path) {
+    public WxCodeUnlimitedResponse getWxacode(String path) {
         WxCodeUnlimitedResponse res = new WxCodeUnlimitedResponse();
         //获取token
         String result = (String) RequestWeixinApi.requestApi(Constant.TokenUrl_JK,Constant.GET,null);
@@ -33,12 +48,29 @@ public class QcCodeController extends BaseController{
             res.setErrcode(jsonObject.get("errcode").toString());
             res.setErrmsg(jsonObject.get("errmsg").toString());
         } else {
+            //将微信接口返回的byte数组转换成图片
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
+            //设置二维码图片名
+            String imageName = location + "qcCode\\"
+                    + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + ".jpg";
+            File file = new File(imageName);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            try {
+                BufferedImage img = ImageIO.read(bais);
+                ImageIO.write(img, "jpg", file);
+            } catch (IOException e) {
+                log.error("【二维码生成失败】: {}", e.getMessage());
+            }
+
             res.setErrcode("0");
             res.setErrmsg("ok");
-            res.setBuffer(byteArray);
+            res.setImageName(imageName);
+
         }
 
-        return null;
+        return res;
     }
 
 }

@@ -17,6 +17,19 @@ public class WxCodeUnlimitedResponse {
      */
     private byte[] buffer;
 
+    /**
+     * 图片名
+     */
+    private String imageName;
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     public String getErrcode() {
         return errcode;
     }
