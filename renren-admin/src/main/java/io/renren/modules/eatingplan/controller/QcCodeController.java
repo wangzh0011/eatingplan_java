@@ -51,9 +51,9 @@ public class QcCodeController extends BaseController{
             //将微信接口返回的byte数组转换成图片
             ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
             //设置二维码图片名
-            String imageName = location + "qcCode\\"
+            String imageName = "qcCode/"
                     + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + ".jpg";
-            File file = new File(imageName);
+            File file = new File(location + imageName);
             if (!file.exists()) {
                 file.mkdirs();
             }
