@@ -43,7 +43,7 @@ public class UserInfoController extends BaseController{
         log.info("***************openId*************** " + openId);
 
 
-        //保存openID到数据库  创建用户
+        //保存openID到数据库
         List<Users> users = usersInfoService.query(openId);
         Users user = new Users();
         if (users.size() > 0) {

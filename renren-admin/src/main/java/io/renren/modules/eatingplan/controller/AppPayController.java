@@ -1,14 +1,13 @@
 package io.renren.modules.eatingplan.controller;
 
-import com.alibaba.fastjson.JSON;
 import io.renren.common.utils.*;
 import io.renren.modules.eatingplan.entity.PayParameter;
 import io.renren.modules.eatingplan.entity.UnifiedorderParameter;
+import io.renren.modules.sys.service.SysConfigService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -27,6 +26,10 @@ import java.util.*;
 @RequestMapping("/eatingplan")
 public class AppPayController extends BaseController{
 
+    @Autowired
+    private SysConfigService sysConfigService;
+
+    private Integer rmb = Integer.valueOf(sysConfigService.getValue("RMB"));
 
     /**
      * 发起支付
@@ -47,7 +50,7 @@ public class AppPayController extends BaseController{
         unifiedorder.setNonce_str(nonceStr);
         unifiedorder.setBody("jk");
         unifiedorder.setOut_trade_no(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + Math.round(Math.random()*899+100));
-        unifiedorder.setTotal_fee(1);
+        unifiedorder.setTotal_fee(rmb*100);
         unifiedorder.setSpbill_create_ip(IPUtils.getIpAddr(request));
         unifiedorder.setNotify_url(Constant.notifyUrl);
         unifiedorder.setTrade_type(Constant.tradeType);
@@ -67,12 +70,12 @@ public class AppPayController extends BaseController{
 //
 //            String result = restTemplate.postForObject(payUrl,unifiedorderXml,String.class);
 
-            Object result = RequestWeixinApi.requestApi(payUrl,Constant.POST,unifiedorderXml);
+//            Object result = RequestWeixinApi.requestApi(payUrl,Constant.POST,unifiedorderXml);
 
-//            String xmlStr = HttpUtil.doPostToStr(payUrl,unifiedorderXml);
-            log.info("调用统一接口返回结果：" + result);
-//            prepayId = (String) JSON.parseObject(result, Map.class).get("prepay_id");
-//            log.info("prepayId:" + prepayId);
+            String xmlStr = HttpUtil.doPostToStr(payUrl,unifiedorderXml);
+            log.info("调用统一接口返回结果：" + xmlStr);
+            prepayId = XmlUtil.getXmlAttribute(xmlStr,"prepay_id");
+            log.info("prepayId:" + prepayId);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +84,7 @@ public class AppPayController extends BaseController{
         //获取小程序调取支付接口所需参数
         PayParameter pay = new PayParameter();
         pay.setNonceStr(nonceStr);
-        pay.setPackage_pay(prepayId);
+        pay.setPackage_pay("prepay_id=" + prepayId);
         pay.setSingTpye("MD5");
         pay.setTimeStamp(timeStamp);
 
