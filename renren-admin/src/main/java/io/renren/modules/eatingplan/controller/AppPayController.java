@@ -5,8 +5,10 @@ import io.renren.common.utils.*;
 import io.renren.modules.eatingplan.entity.PayParameter;
 import io.renren.modules.eatingplan.entity.UnifiedorderParameter;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -43,7 +45,7 @@ public class AppPayController extends BaseController{
         unifiedorder.setAppid(Constant.AppId_JK);
         unifiedorder.setMch_id(Constant.mchId);
         unifiedorder.setNonce_str(nonceStr);
-        unifiedorder.setBody("健康饮食计划");
+        unifiedorder.setBody("jk");
         unifiedorder.setOut_trade_no(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + Math.round(Math.random()*899+100));
         unifiedorder.setTotal_fee(1);
         unifiedorder.setSpbill_create_ip(IPUtils.getIpAddr(request));
@@ -57,10 +59,20 @@ public class AppPayController extends BaseController{
         //请求统一下单接口
         String prepayId = null;
         try {
-            String xmlStr = HttpUtil.doPostToStr(payUrl,unifiedorderXml);
-            log.info("调用统一接口返回结果：" + xmlStr);
-            prepayId = (String) JSON.parseObject(xmlStr, Map.class).get("prepay_id");
-            log.info("prepayId:" + prepayId);
+//            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+//            //设置超时
+//            requestFactory.setConnectTimeout(5000);
+//
+//            RestTemplate restTemplate = new RestTemplate(requestFactory);
+//
+//            String result = restTemplate.postForObject(payUrl,unifiedorderXml,String.class);
+
+            Object result = RequestWeixinApi.requestApi(payUrl,Constant.POST,unifiedorderXml);
+
+//            String xmlStr = HttpUtil.doPostToStr(payUrl,unifiedorderXml);
+            log.info("调用统一接口返回结果：" + result);
+//            prepayId = (String) JSON.parseObject(result, Map.class).get("prepay_id");
+//            log.info("prepayId:" + prepayId);
 
         } catch (Exception e) {
             e.printStackTrace();

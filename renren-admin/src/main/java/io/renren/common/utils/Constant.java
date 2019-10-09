@@ -132,7 +132,7 @@ public class Constant {
     //mch_id
     public static String mchId = "1557690121";
     //key
-    public static String key = "";
+    public static String key = "linweidongjiankanfangqie12345678";
     //通知地址
     public static String notifyUrl = "https://fangqie.top";
     //交易类型
