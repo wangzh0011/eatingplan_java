@@ -10,18 +10,16 @@ package io.renren.modules.eatingplan.dao;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.renren.modules.eatingplan.entity.Users;
-import io.renren.modules.sys.entity.FoodsEntity;
+import io.renren.modules.eatingplan.entity.PayOrder;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 /**
- * 用户信息
+ * 支付记录
  *
- * @author Mark sunlightcs@gmail.com
+ * @author
  */
 @Mapper
-public interface UsersInfoDao extends BaseMapper<Users> {
+public interface PayOrderDao extends BaseMapper<PayOrder> {
 
 
 }

@@ -15,7 +15,7 @@ import io.renren.modules.eatingplan.entity.WxAppShareInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 系统配置信息
+ * 分享信息
  *
  * @author Mark sunlightcs@gmail.com
  */

@@ -1,8 +1,10 @@
 package io.renren.modules.eatingplan.controller;
 
 import io.renren.common.utils.*;
+import io.renren.modules.eatingplan.entity.PayOrder;
 import io.renren.modules.eatingplan.entity.PayParameter;
 import io.renren.modules.eatingplan.entity.UnifiedorderParameter;
+import io.renren.modules.eatingplan.service.PayOrderService;
 import io.renren.modules.sys.service.SysConfigService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,8 @@ public class AppPayController extends BaseController{
     @Autowired
     private SysConfigService sysConfigService;
 
-
+    @Autowired
+    private PayOrderService payOrderService;
 
     /**
      * 发起支付
@@ -38,7 +41,7 @@ public class AppPayController extends BaseController{
      * @return
      */
     @RequestMapping("/pay")
-    public Object getPayParameter(String openId, HttpServletRequest request){
+    public R getPayParameter(String openId, HttpServletRequest request){
 
         Integer rmb = Integer.valueOf(sysConfigService.getValue("RMB"));
 
@@ -64,15 +67,6 @@ public class AppPayController extends BaseController{
         //请求统一下单接口
         String prepayId = null;
         try {
-//            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-//            //设置超时
-//            requestFactory.setConnectTimeout(5000);
-//
-//            RestTemplate restTemplate = new RestTemplate(requestFactory);
-//
-//            String result = restTemplate.postForObject(payUrl,unifiedorderXml,String.class);
-
-//            Object result = RequestWeixinApi.requestApi(payUrl,Constant.POST,unifiedorderXml);
 
             String xmlStr = HttpUtil.doPostToStr(payUrl,unifiedorderXml);
             log.info("调用统一接口返回结果：" + xmlStr);
@@ -92,7 +86,30 @@ public class AppPayController extends BaseController{
 
         pay = getPayRequestParameter(pay);
 
-        return pay;
+        return R.ok().put("pay",pay).put("orderParameter",unifiedorder);
+    }
+
+    /**
+     * 保存支付记录
+     * @param order
+     */
+    @RequestMapping("/savePayOrder")
+    public void savePayOrder (PayOrder order) {
+        payOrderService.save(order);
+    }
+
+    /**
+     * 查询是否有支付记录
+     * @param uid
+     * @return
+     */
+    @RequestMapping("/getPayOrder")
+    public boolean getPayOrder (Long uid) {
+        List<PayOrder> list = payOrderService.query(uid);
+        if (list.size() > 0 ) {
+            return true;
+        }
+        return false;
     }
 
     /**
