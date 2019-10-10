@@ -29,7 +29,7 @@ public class AppPayController extends BaseController{
     @Autowired
     private SysConfigService sysConfigService;
 
-    private Integer rmb = Integer.valueOf(sysConfigService.getValue("RMB"));
+
 
     /**
      * 发起支付
@@ -39,6 +39,8 @@ public class AppPayController extends BaseController{
      */
     @RequestMapping("/pay")
     public Object getPayParameter(String openId, HttpServletRequest request){
+
+        Integer rmb = Integer.valueOf(sysConfigService.getValue("RMB"));
 
         String timeStamp = String.valueOf(new Date().getTime()/1000);
         String nonceStr = UUID.randomUUID().toString().replace("-","");

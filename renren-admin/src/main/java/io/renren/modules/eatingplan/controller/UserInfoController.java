@@ -72,8 +72,7 @@ public class UserInfoController extends BaseController{
             return null;
         }
         usersInfoService.save(user);//保存user信息
-        user.setId(usersInfoService.query(user.getOpenid()).get(0).getId());
-        return user;
+        return usersInfoService.query(user.getOpenid()).get(0);
     }
 
     /**
