@@ -1,5 +1,7 @@
 package io.renren.modules.eatingplan.controller;
 
+import io.renren.modules.eatingplan.service.LuckyHistoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,12 +13,17 @@ import java.util.Set;
 @RequestMapping("/eatingplan")
 public class LuckyController {
 
+    @Autowired
+    private LuckyHistoryService luckyHistoryService;
+
     /**
      * 抽奖程序
      * @return
      */
     @RequestMapping("/lucky")
-    public String lucky() {
+    public String lucky(Long uid) {
+
+
         return arithmetic();
     }
 
