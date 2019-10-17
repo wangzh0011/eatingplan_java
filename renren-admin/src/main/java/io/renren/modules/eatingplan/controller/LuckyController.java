@@ -64,6 +64,7 @@ public class LuckyController extends BaseController{
             map.put("luckyType",luckyType);
             map.put("luckyMessage","完成抽奖");
             map.put("integral",integral - 10);
+            map.put("times",times + 1);
             return R.ok().put("luckyInfo",map);
         }
 
@@ -112,8 +113,12 @@ public class LuckyController extends BaseController{
                 if(times < 10 && (prizesId.equals("5") || prizesId.equals("1"))) {
                     return prizesId;
                 }
+                //第10次必中50元
+                else if(times == 10) {
+                    return "0";
+                }
                 //10次到50次中奖奖项
-                else if(times >= 10 && times < 50 && !(prizesId.equals("6") || prizesId.equals("2") || prizesId.equals("4"))) {
+                else if(times > 10 && times < 50 && !(prizesId.equals("6") || prizesId.equals("2") || prizesId.equals("4"))) {
                     return prizesId;
                 }
                 //50次到500次中奖奖项

@@ -62,6 +62,7 @@ public class WxAppShareInfoController extends BaseController{
         int notPayNum = wxAppShareInfoService.query(shareuid,"N").size();//未支付
         //查询积分
         int integral = 0;
+        int times = 0;
         List<Lucky> list = luckyService.query(shareuid);
         int luckyNum = list.size();
         //数据库不存在 则新增
@@ -70,9 +71,11 @@ public class WxAppShareInfoController extends BaseController{
             luckyService.save(lucky);
         } else {
             integral = list.get(0).getIntegral();
+            times = list.get(0).getTimes();
         }
 //        map.put("shareTotalNum",shareTotalNum);
         map.put("integral",integral);
+        map.put("times",times);
         map.put("hasPayNum",hasPayNum);
         map.put("notPayNum",notPayNum);
         return R.ok().put("shareInfo",map);
