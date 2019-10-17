@@ -39,6 +39,7 @@ public class WxAppShareInfoController extends BaseController{
         //数据库不存在 则新增
         if(luckyNum == 0) {
             Lucky lucky = new Lucky(shareInfo.getShareuid());
+            lucky.setIntegral(1);
             luckyService.save(lucky);
         } else {
             int integral = list.get(0).getIntegral();
@@ -49,7 +50,7 @@ public class WxAppShareInfoController extends BaseController{
     }
 
     /**
-     * 根据shareuid查询已分享人数
+     * 根据shareuid查询已分享人数，拥有积分数
      * @param shareuid
      * @return
      */
