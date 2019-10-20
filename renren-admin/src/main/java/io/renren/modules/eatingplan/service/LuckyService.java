@@ -15,6 +15,6 @@ public interface LuckyService extends IService<Lucky> {
      */
     boolean save(Lucky info);
 
-    void update(Lucky info);
+    boolean update(Lucky info);
 
 }

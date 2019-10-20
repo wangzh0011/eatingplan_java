@@ -37,8 +37,11 @@ public class LuckyServiceImpl extends ServiceImpl<LuckyDao, Lucky> implements Lu
 	}
 
 	@Override
-	public void update(Lucky info) {
-		baseMapper.updateById(info);
+	public boolean update(Lucky info) {
+		if(baseMapper.updateById(info) == 1)
+			return true;
+		else
+			return false;
 	}
 
 

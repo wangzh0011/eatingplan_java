@@ -47,10 +47,10 @@ public class WxAppShareInfoServiceImpl extends ServiceImpl<WxAppShareInfoDao, Wx
 		return true;
 	}
 
-
-
-
-
+	@Override
+	public void update(WxAppShareInfo shareInfo) {
+		baseMapper.updateById(shareInfo);
+	}
 
 
 }

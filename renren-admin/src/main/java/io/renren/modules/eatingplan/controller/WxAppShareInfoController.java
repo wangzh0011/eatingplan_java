@@ -50,7 +50,7 @@ public class WxAppShareInfoController extends BaseController{
     }
 
     /**
-     * 根据shareuid查询已分享人数，拥有积分数
+     * 根据shareuid查询已分享人数，拥有积分数，代理权限
      * @param shareuid
      * @return
      */
@@ -72,8 +72,16 @@ public class WxAppShareInfoController extends BaseController{
         } else {
             integral = list.get(0).getIntegral();
             times = list.get(0).getTimes();
+            //如果积分数大于100 则拥有代理权限
+            if(integral > 100) {
+                list.get(0).setCanAgent("Y");
+                luckyService.update(list.get(0));
+            }
         }
 //        map.put("shareTotalNum",shareTotalNum);
+        map.put("money",list.get(0).getMoney());
+        map.put("isAgent",list.get(0).getIsAgent());
+        map.put("canAgent",list.get(0).getCanAgent());
         map.put("integral",integral);
         map.put("times",times);
         map.put("hasPayNum",hasPayNum);

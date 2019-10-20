@@ -15,6 +15,36 @@ public class Lucky {
 
     private int times;//已抽奖次数
 
+    private String canAgent;//是否有代理权限
+
+    private String isAgent;//是否已经成为代理
+
+    private int money;//佣金
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public String getCanAgent() {
+        return canAgent;
+    }
+
+    public void setCanAgent(String canAgent) {
+        this.canAgent = canAgent;
+    }
+
+    public String getIsAgent() {
+        return isAgent;
+    }
+
+    public void setIsAgent(String isAgent) {
+        this.isAgent = isAgent;
+    }
+
     public Lucky(Long uid) {
         this.uid = uid;
     }

@@ -1,10 +1,11 @@
 package io.renren.modules.eatingplan.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.utils.*;
-import io.renren.modules.eatingplan.entity.PayOrder;
-import io.renren.modules.eatingplan.entity.PayParameter;
-import io.renren.modules.eatingplan.entity.UnifiedorderParameter;
+import io.renren.modules.eatingplan.entity.*;
+import io.renren.modules.eatingplan.service.LuckyService;
 import io.renren.modules.eatingplan.service.PayOrderService;
+import io.renren.modules.eatingplan.service.WxAppShareInfoService;
 import io.renren.modules.sys.service.SysConfigService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class AppPayController extends BaseController{
     @Autowired
     private PayOrderService payOrderService;
 
+    @Autowired
+    private WxAppShareInfoService wxAppShareInfoService;
+
+    @Autowired
+    private LuckyService luckyService;
+
     /**
      * 发起支付
      * @param openId
@@ -43,7 +50,9 @@ public class AppPayController extends BaseController{
     @RequestMapping("/pay")
     public R getPayParameter(String openId, HttpServletRequest request){
 
-        Integer rmb = Integer.valueOf(sysConfigService.getValue("RMB"));
+        Double rmb_double = Double.valueOf(sysConfigService.getValue("RMB")) * 100;
+
+        Integer rmb = rmb_double.intValue();
 
         String timeStamp = String.valueOf(new Date().getTime()/1000);
         String nonceStr = UUID.randomUUID().toString().replace("-","");
@@ -55,7 +64,7 @@ public class AppPayController extends BaseController{
         unifiedorder.setNonce_str(nonceStr);
         unifiedorder.setBody("jk");
         unifiedorder.setOut_trade_no(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + Math.round(Math.random()*899+100));
-        unifiedorder.setTotal_fee(rmb*100);
+        unifiedorder.setTotal_fee(rmb);
         unifiedorder.setSpbill_create_ip(IPUtils.getIpAddr(request));
         unifiedorder.setNotify_url(Constant.notifyUrl);
         unifiedorder.setTrade_type(Constant.tradeType);
@@ -95,7 +104,33 @@ public class AppPayController extends BaseController{
      */
     @RequestMapping("/savePayOrder")
     public void savePayOrder (PayOrder order) {
+        //支付记录
         payOrderService.save(order);
+
+        //更新分享表的支付信息
+        List<WxAppShareInfo> list = wxAppShareInfoService.query(order.getUid());
+        if(list.size() > 0 ) {
+            list.get(0).setIsPay("Y");//已支付
+            wxAppShareInfoService.update(list.get(0));
+            //为分享者加积分
+            Long shareUid = list.get(0).getShareuid();
+            List<Lucky> luckyList = luckyService.query(shareUid);
+            if(luckyList.size() == 0) {//若无抽奖小程序注册信息 则新增
+                Lucky lucky = new Lucky(shareUid);
+                lucky.setIntegral(5);
+                luckyService.save(lucky);
+            } else {
+                int integral = luckyList.get(0).getIntegral();
+                //加积分
+                luckyList.get(0).setIntegral(integral + 5);
+                if(luckyList.get(0).getIsAgent().equals("Y")) {
+                    int money = luckyList.get(0).getMoney();
+                    //加佣金
+                    luckyList.get(0).setIntegral(money + 5);
+                }
+                luckyService.update(luckyList.get(0));
+            }
+        }
     }
 
     /**
@@ -270,7 +305,6 @@ public class AppPayController extends BaseController{
     }
 
     public static void main(String[] args){
-
 
     }
 }

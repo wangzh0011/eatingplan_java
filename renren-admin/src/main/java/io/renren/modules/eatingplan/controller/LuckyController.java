@@ -1,7 +1,11 @@
 package io.renren.modules.eatingplan.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.additional.query.impl.QueryChainWrapper;
+import io.renren.common.utils.GoodsTransition;
 import io.renren.common.utils.R;
 import io.renren.modules.eatingplan.entity.Lucky;
+import io.renren.modules.eatingplan.entity.LuckyHistory;
 import io.renren.modules.eatingplan.service.LuckyHistoryService;
 import io.renren.modules.eatingplan.service.LuckyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,27 +51,70 @@ public class LuckyController extends BaseController{
             times = list.get(0).getTimes();
             //获取总积分
             integral = list.get(0).getIntegral();
+
             if(integral < 10) {
                 map.put("luckyType","-1");
                 map.put("luckyMessage","积分不足");
                 map.put("integral",integral);
                 return R.ok().put("luckyInfo",map);
             }
-            //10积分抽一次奖
-            list.get(0).setIntegral(integral - 10);
+
             //记录抽奖次数
             list.get(0).setTimes(times + 1);
-            //更新抽奖次数和剩余积分
-            luckyService.update(list.get(0));
+
             //开始抽奖
             String luckyType = arithmetic(times + 1);
+            //记录中奖信息 非积分类   02347表示奖项集合
+            if("02347".contains(luckyType)) {
+                LuckyHistory history = new LuckyHistory();
+                history.setUid(uid);
+                history.setGoods(GoodsTransition.transition(luckyType));
+                log.info("中奖项：" + GoodsTransition.transition(luckyType));
+                luckyHistoryService.save(history);
+            }
+            //积分类奖品  +15积分  10积分抽一次奖 -10积分
+            else if(luckyType.equals("1")) {
+                list.get(0).setIntegral(integral + 15 - 10);
+            }
+            //积分类奖品  +100积分  10积分抽一次奖 -10积分
+            else if(luckyType.equals("6")) {
+                list.get(0).setIntegral(integral + 100 - 10);
+            }
+            //未中奖 10积分抽一次奖 -10积分
+            else {
+                list.get(0).setIntegral(integral - 10);
+            }
+            //更新抽奖次数和剩余积分
+            luckyService.update(list.get(0));
+
             map.put("luckyType",luckyType);
             map.put("luckyMessage","完成抽奖");
-            map.put("integral",integral - 10);
+            map.put("integral",list.get(0).getIntegral());
             map.put("times",times + 1);
             return R.ok().put("luckyInfo",map);
         }
 
+    }
+
+    /**
+     * 成为代理
+     */
+    @RequestMapping("/beAgent")
+    public boolean beAgent(Long uid) {
+        Lucky lucky = luckyService.query(uid).get(0);
+        lucky.setIsAgent("Y");
+        boolean flag = luckyService.update(lucky);
+        return flag;
+    }
+
+
+    /**
+     * 获取中奖信息
+     */
+    @RequestMapping("/getMyGoods")
+    public List<LuckyHistory> getMyGoods(Long uid) {
+        List<LuckyHistory> list = luckyHistoryService.query(uid);
+        return list;
     }
 
     /**
