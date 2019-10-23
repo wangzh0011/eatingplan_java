@@ -126,7 +126,7 @@ public class AppPayController extends BaseController{
                 if(luckyList.get(0).getIsAgent().equals("Y")) {
                     int money = luckyList.get(0).getMoney();
                     //加佣金
-                    luckyList.get(0).setIntegral(money + 5);
+                    luckyList.get(0).setMoney(money + 5);
                 }
                 luckyService.update(luckyList.get(0));
             }

@@ -21,6 +21,16 @@ public class Lucky {
 
     private int money;//佣金
 
+    private String createTime;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public int getMoney() {
         return money;
     }

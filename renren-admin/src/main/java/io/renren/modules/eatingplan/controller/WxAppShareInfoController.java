@@ -1,5 +1,6 @@
 package io.renren.modules.eatingplan.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.utils.R;
 import io.renren.modules.eatingplan.entity.Lucky;
 import io.renren.modules.eatingplan.entity.WxAppShareInfo;
@@ -9,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/eatingplan")
@@ -88,5 +88,56 @@ public class WxAppShareInfoController extends BaseController{
         map.put("notPayNum",notPayNum);
         return R.ok().put("shareInfo",map);
     }
+
+    /**
+     * 根据uid获取分享数据   按时间分类
+     * @param uid
+     * @return
+     */
+    @RequestMapping("/getAgentData")
+    public R getAgentData(Long uid){
+        Map map = new HashMap();
+        //时间格式化
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+
+        //昨天
+        calendar.add(Calendar.DATE, -1);
+        String yesterday = sdf.format(calendar.getTime());
+
+        //前天
+        calendar.add(Calendar.DATE, -1);
+        String beforeYesterday = sdf.format(calendar.getTime());
+
+        //今天
+        String today = sdf.format(new Date());
+
+        wxAppShareInfoService.query(uid,"Y",yesterday).size();
+        wxAppShareInfoService.query(uid,"N",yesterday).size();
+        wxAppShareInfoService.query(uid,"Y",beforeYesterday).size();
+        wxAppShareInfoService.query(uid,"N",beforeYesterday).size();
+        wxAppShareInfoService.query(uid,"Y",today).size();
+        wxAppShareInfoService.query(uid,"N",today).size();
+
+        return R.ok();
+    }
+
+    public static void  main(String[] arg){
+//        //时间格式化
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        Calendar calendar = Calendar.getInstance();
+//
+//        //前天
+//        calendar.add(Calendar.DATE, -1);
+//        String beforeYesterday = sdf.format(calendar.getTime());
+//
+//        //昨天
+//        calendar.add(Calendar.DATE, -1);
+//        String yesterday = sdf.format(calendar.getTime());
+//
+//        System.out.println(beforeYesterday);
+//        System.out.println(yesterday);
+    }
+
 
 }

@@ -20,6 +20,15 @@ public interface WxAppShareInfoService extends IService<WxAppShareInfo> {
     List<WxAppShareInfo> query(Long shareuid,String ispay);
 
     /**
+     * 根据支付状态查询分享信息 按日期分类
+     * @param shareuid
+     * @param ispay
+     * @param date
+     * @return
+     */
+    List<WxAppShareInfo> query(Long shareuid,String ispay,String date);
+
+    /**
      * 保存配置信息
      */
     boolean save(WxAppShareInfo shareInfo);

@@ -29,6 +29,16 @@ public class WxAppShareInfo {
 
     private String payId; //支付id
 
+    private String createTime;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public Long getId() {
         return id;
     }
