@@ -152,5 +152,5 @@ public class Constant {
     //https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=ACCESS_TOKEN
     //https://api.weixin.qq.com/wxa/getwxacode?access_token=ACCESS_TOKEN
     //https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=ACCESS_TOKEN
-    public final static String WXACODE_URL = "https://api.weixin.qq.com/wxa/getwxacode?access_token=ACCESS_TOKEN";
+    public final static String WXACODE_URL = "https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=ACCESS_TOKEN";
 }
