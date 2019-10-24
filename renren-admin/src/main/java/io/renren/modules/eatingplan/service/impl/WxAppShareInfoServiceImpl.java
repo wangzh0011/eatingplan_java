@@ -50,7 +50,7 @@ public class WxAppShareInfoServiceImpl extends ServiceImpl<WxAppShareInfoDao, Wx
 				.eq("is_pay",ispay)
 				.like("create_time",date)
 		);
-		return null;
+		return shareInfos;
 	}
 
 	@Override

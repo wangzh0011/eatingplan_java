@@ -112,14 +112,21 @@ public class WxAppShareInfoController extends BaseController{
         //今天
         String today = sdf.format(new Date());
 
-        wxAppShareInfoService.query(uid,"Y",yesterday).size();
-        wxAppShareInfoService.query(uid,"N",yesterday).size();
-        wxAppShareInfoService.query(uid,"Y",beforeYesterday).size();
-        wxAppShareInfoService.query(uid,"N",beforeYesterday).size();
-        wxAppShareInfoService.query(uid,"Y",today).size();
-        wxAppShareInfoService.query(uid,"N",today).size();
+        int yesterdayHasPay = wxAppShareInfoService.query(uid,"Y",yesterday).size();
+        int yesterdayNotPay = wxAppShareInfoService.query(uid,"N",yesterday).size();
+        int beforeYesterdayHasPay = wxAppShareInfoService.query(uid,"Y",beforeYesterday).size();
+        int beforeYesterdayNotPay = wxAppShareInfoService.query(uid,"N",beforeYesterday).size();
+        int todayHasPay = wxAppShareInfoService.query(uid,"Y",today).size();
+        int todayNotPay = wxAppShareInfoService.query(uid,"N",today).size();
 
-        return R.ok();
+        map.put("yesterdayHasPay",yesterdayHasPay);
+        map.put("yesterdayNotPay",yesterdayNotPay);
+        map.put("beforeYesterdayHasPay",beforeYesterdayHasPay);
+        map.put("beforeYesterdayNotPay",beforeYesterdayNotPay);
+        map.put("todayHasPay",todayHasPay);
+        map.put("todayNotPay",todayNotPay);
+
+        return R.ok().put("agentData",map);
     }
 
     public static void  main(String[] arg){
