@@ -31,7 +31,10 @@ public class WxAppShareInfoController extends BaseController{
     @RequestMapping("/setShareInfo")
     public void setShareInfo(WxAppShareInfo shareInfo){
         log.info("WxAppShareInfo ==> " + shareInfo);
+
         //保存分享信息
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        shareInfo.setCreateTime(sdf.format(new Date()));
         wxAppShareInfoService.save(shareInfo);
         /**为分享者加积分 begin**/
         List<Lucky> list = luckyService.query(shareInfo.getShareuid());
@@ -40,6 +43,7 @@ public class WxAppShareInfoController extends BaseController{
         if(luckyNum == 0) {
             Lucky lucky = new Lucky(shareInfo.getShareuid());
             lucky.setIntegral(1);
+            lucky.setCreateTime(sdf.format(new Date()));
             luckyService.save(lucky);
         } else {
             int integral = list.get(0).getIntegral();
@@ -58,6 +62,7 @@ public class WxAppShareInfoController extends BaseController{
     public R getShareInfo(Long shareuid){
         Map map = new HashMap();
 //        int shareTotalNum = wxAppShareInfoService.query(shareuid).size();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int hasPayNum = wxAppShareInfoService.query(shareuid,"Y").size();//已支付
         int notPayNum = wxAppShareInfoService.query(shareuid,"N").size();//未支付
         //查询积分
@@ -68,6 +73,7 @@ public class WxAppShareInfoController extends BaseController{
         //数据库不存在 则新增
         if(luckyNum == 0) {
             Lucky lucky = new Lucky(shareuid);
+            lucky.setCreateTime(sdf.format(new Date()));
             luckyService.save(lucky);
         } else {
             integral = list.get(0).getIntegral();

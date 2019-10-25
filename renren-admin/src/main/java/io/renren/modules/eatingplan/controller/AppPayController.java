@@ -104,7 +104,9 @@ public class AppPayController extends BaseController{
      */
     @RequestMapping("/savePayOrder")
     public void savePayOrder (PayOrder order) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //支付记录
+        order.setCreateTime(sdf.format(new Date()));
         payOrderService.save(order);
 
         //更新分享表的支付信息
@@ -115,7 +117,7 @@ public class AppPayController extends BaseController{
             //为分享者加积分
             Long shareUid = list.get(0).getShareuid();
             List<Lucky> luckyList = luckyService.query(shareUid);
-            if(luckyList.size() == 0) {//若无抽奖小程序注册信息 则新增
+            if(luckyList.size() == 0) {//若无抽奖小程序注册信息 则新增   --两个小程序合并之后废弃
                 Lucky lucky = new Lucky(shareUid);
                 lucky.setIntegral(5);
                 luckyService.save(lucky);

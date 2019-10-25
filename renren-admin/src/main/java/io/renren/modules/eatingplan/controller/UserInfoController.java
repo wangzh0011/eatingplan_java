@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +71,8 @@ public class UserInfoController extends BaseController{
             log.info("系统中已注册过openid为【" + user.getOpenid() + "】的用户");
             return null;
         }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        user.setCreateTime(sdf.format(new Date()));
         usersInfoService.save(user);//保存user信息
         return usersInfoService.query(user.getOpenid()).get(0);
     }

@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/eatingplan")
@@ -33,6 +31,7 @@ public class LuckyController extends BaseController{
      */
     @RequestMapping("/lucky")
     public R lucky(Long uid) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<Lucky> list = luckyService.query(uid);
         int luckyNum = list.size();
         int times = 0;
@@ -40,7 +39,7 @@ public class LuckyController extends BaseController{
         Map map = new HashMap();
         if(luckyNum == 0) {
             Lucky lucky = new Lucky(uid);
-            lucky.setTimes(times + 1);
+            lucky.setCreateTime(sdf.format(new Date()));
             luckyService.save(lucky);
             map.put("luckyType","-1");
             map.put("luckyMessage","积分不足");
@@ -69,6 +68,7 @@ public class LuckyController extends BaseController{
                 LuckyHistory history = new LuckyHistory();
                 history.setUid(uid);
                 history.setGoods(GoodsTransition.transition(luckyType));
+                history.setCreateTime(sdf.format(new Date()));
                 log.info("中奖项：" + GoodsTransition.transition(luckyType));
                 luckyHistoryService.save(history);
             }
