@@ -10,6 +10,8 @@ public interface UsersInfoService extends IService<Users> {
 
     List<Users> query(String openid);
 
+    List<Users> queryByUid(Long uid);
+
     /**
      * 保存配置信息
      */

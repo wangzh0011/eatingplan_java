@@ -13,11 +13,21 @@ public class LuckyHistory {
 
     private String goods;
 
+    private String goodsType;//奖品对应的数字
+
     private String createTime;
 
     private String openid;
 
     private String userName;
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
 
     public Long getId() {
         return id;

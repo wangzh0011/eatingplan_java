@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>用户数据统计</title>
+<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="paramKey" @keyup.enter="query" placeholder="用户id">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+     
+
+</div>
+<script src="${request.contextPath}/statics/js/modules/sys/userData.js?_${.now?long}"></script>
+</body>
+</html>

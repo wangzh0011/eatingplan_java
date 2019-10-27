@@ -36,6 +36,7 @@ public class WxAppShareInfoController extends BaseController{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         shareInfo.setCreateTime(sdf.format(new Date()));
         wxAppShareInfoService.save(shareInfo);
+        int shareNum = wxAppShareInfoService.query(shareInfo.getShareuid()).size();
         /**为分享者加积分 begin**/
         List<Lucky> list = luckyService.query(shareInfo.getShareuid());
         int luckyNum = list.size();
@@ -46,9 +47,11 @@ public class WxAppShareInfoController extends BaseController{
             lucky.setCreateTime(sdf.format(new Date()));
             luckyService.save(lucky);
         } else {
-            int integral = list.get(0).getIntegral();
-            list.get(0).setIntegral(integral + 1);
-            luckyService.update(list.get(0));
+            if(shareNum <= 50) {
+                int integral = list.get(0).getIntegral();
+                list.get(0).setIntegral(integral + 1);
+                luckyService.update(list.get(0));
+            }
         }
         /**end**/
     }
@@ -126,11 +129,11 @@ public class WxAppShareInfoController extends BaseController{
         int todayNotPay = wxAppShareInfoService.query(uid,"N",today).size();
 
         map.put("yesterdayHasPay",yesterdayHasPay);
-        map.put("yesterdayNotPay",yesterdayNotPay);
+        map.put("yesterdayNotPay",yesterdayNotPay + yesterdayHasPay); //点击量
         map.put("beforeYesterdayHasPay",beforeYesterdayHasPay);
-        map.put("beforeYesterdayNotPay",beforeYesterdayNotPay);
+        map.put("beforeYesterdayNotPay",beforeYesterdayNotPay + beforeYesterdayHasPay);//点击量
         map.put("todayHasPay",todayHasPay);
-        map.put("todayNotPay",todayNotPay);
+        map.put("todayNotPay",todayNotPay + todayHasPay);//点击量
 
         return R.ok().put("agentData",map);
     }

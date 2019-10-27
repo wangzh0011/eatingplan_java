@@ -31,6 +31,14 @@ public class UsersInfoServiceImpl extends ServiceImpl<UsersInfoDao, Users> imple
 	}
 
 	@Override
+	public List<Users> queryByUid(Long uid) {
+
+		List<Users> user = baseMapper.selectList(new QueryWrapper<Users>().eq("id",uid));
+
+		return user;
+	}
+
+	@Override
 	public boolean save(Users user) {
 		baseMapper.insert(user);
 		return true;

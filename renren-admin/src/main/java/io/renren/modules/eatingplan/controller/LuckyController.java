@@ -68,6 +68,7 @@ public class LuckyController extends BaseController{
                 LuckyHistory history = new LuckyHistory();
                 history.setUid(uid);
                 history.setGoods(GoodsTransition.transition(luckyType));
+                history.setGoodsType(luckyType);
                 history.setCreateTime(sdf.format(new Date()));
                 log.info("中奖项：" + GoodsTransition.transition(luckyType));
                 luckyHistoryService.save(history);
