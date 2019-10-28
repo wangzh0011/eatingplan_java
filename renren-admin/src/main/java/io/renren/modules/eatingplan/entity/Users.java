@@ -23,6 +23,16 @@ public class Users {
 
     private String createTime;
 
+    private String food;//每日应摄入总量
+
+    public String getFood() {
+        return food;
+    }
+
+    public void setFood(String food) {
+        this.food = food;
+    }
+
     public String getCreateTime() {
         return createTime;
     }

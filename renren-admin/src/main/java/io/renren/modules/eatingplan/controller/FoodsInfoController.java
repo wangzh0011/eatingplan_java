@@ -1,5 +1,6 @@
 package io.renren.modules.eatingplan.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.utils.R;
 import io.renren.modules.eatingplan.entity.UserFoodsEntity;
@@ -12,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/eatingplan")
@@ -76,18 +75,38 @@ public class FoodsInfoController {
         userFoodsService.saveConfig(dinner);
     }
 
+    /**
+     * 获取用户食谱
+     * @param uid
+     * @return
+     */
     @RequestMapping("/getUserFoods")
     public R getUserFoods(Long uid) {
         List<UserFoodsEntity> userFoods = userFoodsService.queryFoodsInfo(uid);
         List breakfastArray = new ArrayList();
         List lunchArray = new ArrayList();
         List dinnerArray = new ArrayList();
+        String str = null;
         for (UserFoodsEntity foods : userFoods) {
             if(foods.getType().equals("breakfast")) {
-                foods.getFoodsArray();
+                str = foods.getFoodsArray();
+                str = str.substring(1,str.length()-1);
+                breakfastArray = (List)JSON.parse(str);
+            } else if(foods.getType().equals("lunch")) {
+                str = foods.getFoodsArray();
+                str = str.substring(1,str.length()-1);
+                lunchArray = (List)JSON.parse(str);
+            } else if(foods.getType().equals("dinner")) {
+                str = foods.getFoodsArray();
+                str = str.substring(1,str.length()-1);
+                dinnerArray = (List)JSON.parse(str);
             }
         }
-        return R.ok();
+        Map map = new HashMap<>();
+        map.put("breakfastArray",breakfastArray);
+        map.put("lunchArray",lunchArray);
+        map.put("dinnerArray",dinnerArray);
+        return R.ok().put("foods",map);
     }
 
 }
