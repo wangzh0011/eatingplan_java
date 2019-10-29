@@ -31,7 +31,7 @@ public class WxAppShareInfoController extends BaseController{
     @RequestMapping("/setShareInfo")
     public void setShareInfo(WxAppShareInfo shareInfo){
         log.info("WxAppShareInfo ==> " + shareInfo);
-        int userNum = wxAppShareInfoService.query(shareInfo.getUid()).size();
+        int userNum = wxAppShareInfoService.queryUid(shareInfo.getUid()).size();
         if(userNum == 0) {
             //保存分享信息
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

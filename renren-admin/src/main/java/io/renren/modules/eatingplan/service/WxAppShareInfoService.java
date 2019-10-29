@@ -11,6 +11,8 @@ public interface WxAppShareInfoService extends IService<WxAppShareInfo> {
 
     List<WxAppShareInfo> query(Long shareuid);
 
+    List<WxAppShareInfo> queryUid(Long uid);
+
     /**
      * 根据支付状态查询分享信息
      * @param shareuid
