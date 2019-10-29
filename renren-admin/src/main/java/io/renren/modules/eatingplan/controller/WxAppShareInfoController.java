@@ -78,6 +78,7 @@ public class WxAppShareInfoController extends BaseController{
             Lucky lucky = new Lucky(shareuid);
             lucky.setCreateTime(sdf.format(new Date()));
             luckyService.save(lucky);
+            list = luckyService.query(shareuid);
         } else {
             integral = list.get(0).getIntegral();
             times = list.get(0).getTimes();

@@ -48,8 +48,9 @@ public class UserInfoController extends BaseController{
         Users user = new Users();
         if (users.size() > 0) {
             user = users.get(0);
-        }else {
+        }else {//注册
             user.setOpenid(openId);
+            user = registerUser(user);
 //            usersInfoService.save(user);
 //            //查询新增用户的id
 //            user.setId(usersInfoService.query(openId).get(0).getId());
@@ -63,14 +64,13 @@ public class UserInfoController extends BaseController{
      * 注册
      * @param user
      */
-    @RequestMapping("/register")
     public Users registerUser(Users user) {
-        //注册之前查看系统是否已注册该用户
-        List<Users> users = usersInfoService.query(user.getOpenid());
-        if(users.size() > 0) {
-            log.info("系统中已注册过openid为【" + user.getOpenid() + "】的用户");
-            return null;
-        }
+//        //注册之前查看系统是否已注册该用户
+//        List<Users> users = usersInfoService.query(user.getOpenid());
+//        if(users.size() > 0) {
+//            log.info("系统中已注册过openid为【" + user.getOpenid() + "】的用户");
+//            return null;
+//        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         user.setCreateTime(sdf.format(new Date()));
         usersInfoService.save(user);//保存user信息
