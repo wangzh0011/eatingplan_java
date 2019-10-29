@@ -31,29 +31,31 @@ public class WxAppShareInfoController extends BaseController{
     @RequestMapping("/setShareInfo")
     public void setShareInfo(WxAppShareInfo shareInfo){
         log.info("WxAppShareInfo ==> " + shareInfo);
-
-        //保存分享信息
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        shareInfo.setCreateTime(sdf.format(new Date()));
-        wxAppShareInfoService.save(shareInfo);
-        int shareNum = wxAppShareInfoService.query(shareInfo.getShareuid()).size();
-        /**为分享者加积分 begin**/
-        List<Lucky> list = luckyService.query(shareInfo.getShareuid());
-        int luckyNum = list.size();
-        //数据库不存在 则新增
-        if(luckyNum == 0) {
-            Lucky lucky = new Lucky(shareInfo.getShareuid());
-            lucky.setIntegral(1);
-            lucky.setCreateTime(sdf.format(new Date()));
-            luckyService.save(lucky);
-        } else {
-            if(shareNum <= 50) {
-                int integral = list.get(0).getIntegral();
-                list.get(0).setIntegral(integral + 1);
-                luckyService.update(list.get(0));
+        int userNum = wxAppShareInfoService.query(shareInfo.getUid()).size();
+        if(userNum == 0) {
+            //保存分享信息
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            shareInfo.setCreateTime(sdf.format(new Date()));
+            wxAppShareInfoService.save(shareInfo);
+            int shareNum = wxAppShareInfoService.query(shareInfo.getShareuid()).size();
+            /**为分享者加积分 begin**/
+            List<Lucky> list = luckyService.query(shareInfo.getShareuid());
+            int luckyNum = list.size();
+            //数据库不存在 则新增
+            if(luckyNum == 0) {
+                Lucky lucky = new Lucky(shareInfo.getShareuid());
+                lucky.setIntegral(1);
+                lucky.setCreateTime(sdf.format(new Date()));
+                luckyService.save(lucky);
+            } else {
+                if(shareNum <= 50) {
+                    int integral = list.get(0).getIntegral();
+                    list.get(0).setIntegral(integral + 1);
+                    luckyService.update(list.get(0));
+                }
             }
+            /**end**/
         }
-        /**end**/
     }
 
     /**
