@@ -119,8 +119,8 @@ public class AppPayController extends BaseController{
             List<Lucky> luckyList = luckyService.query(shareUid);
             if(luckyList.size() == 0) {//若无抽奖小程序注册信息 则新增   --两个小程序合并之后废弃
                 Lucky lucky = new Lucky(shareUid);
-                lucky.setIntegral(5);
-                lucky.setTotalIntegral(5);
+                lucky.setIntegral(lucky.getIntegral() + 5);
+                lucky.setTotalIntegral(lucky.getTotalIntegral() + 5);
                 luckyService.save(lucky);
             } else {
                 int integral = luckyList.get(0).getIntegral();

@@ -44,7 +44,8 @@ public class WxAppShareInfoController extends BaseController{
             //数据库不存在 则新增
             if(luckyNum == 0) {
                 Lucky lucky = new Lucky(shareInfo.getShareuid());
-                lucky.setIntegral(1);
+                lucky.setIntegral(lucky.getIntegral() + 1);
+                lucky.setTotalIntegral(lucky.getTotalIntegral() + 1);
                 lucky.setCreateTime(sdf.format(new Date()));
                 luckyService.save(lucky);
             } else {
@@ -73,9 +74,7 @@ public class WxAppShareInfoController extends BaseController{
         int hasPayNum = wxAppShareInfoService.query(shareuid,"Y").size();//已支付
         int notPayNum = wxAppShareInfoService.query(shareuid,"N").size();//未支付
         //查询积分
-        int integral = 0;
         int totalIntegral = 0;//累计获得的积分
-        int times = 0;
         List<Lucky> list = luckyService.query(shareuid);
         int luckyNum = list.size();
         //数据库不存在 则新增
@@ -85,9 +84,7 @@ public class WxAppShareInfoController extends BaseController{
             luckyService.save(lucky);
             list = luckyService.query(shareuid);
         } else {
-            integral = list.get(0).getIntegral();
             totalIntegral = list.get(0).getTotalIntegral();
-            times = list.get(0).getTimes();
             //如果积分数大于100 则拥有代理权限
             if(totalIntegral > 100) {
                 list.get(0).setCanAgent("Y");
@@ -98,8 +95,8 @@ public class WxAppShareInfoController extends BaseController{
         map.put("money",list.get(0).getMoney());
         map.put("isAgent",list.get(0).getIsAgent());
         map.put("canAgent",list.get(0).getCanAgent());
-        map.put("integral",integral);
-        map.put("times",times);
+        map.put("integral",list.get(0).getIntegral());
+        map.put("times",list.get(0).getTimes());
         map.put("hasPayNum",hasPayNum);
         map.put("notPayNum",notPayNum);
         return R.ok().put("shareInfo",map);

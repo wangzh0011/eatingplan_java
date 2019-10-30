@@ -11,9 +11,9 @@ public class Lucky {
 
     private Long uid;
 
-    private int integral;//积分
+    private int integral = 10;//积分
 
-    private int totalIntegral;//累计获得的积分
+    private int totalIntegral = 10;//累计获得的积分
 
     private int times;//已抽奖次数
 
