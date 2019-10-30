@@ -36,6 +36,7 @@ public class LuckyController extends BaseController{
         int luckyNum = list.size();
         int times = 0;
         int integral = 0;
+        int totalIntegral = 0;
         Map map = new HashMap();
         if(luckyNum == 0) {
             Lucky lucky = new Lucky(uid);
@@ -50,6 +51,8 @@ public class LuckyController extends BaseController{
             times = list.get(0).getTimes();
             //获取总积分
             integral = list.get(0).getIntegral();
+            //累计获得的积分
+            totalIntegral = list.get(0).getTotalIntegral();
 
             if(integral < 10) {
                 map.put("luckyType","-1");
@@ -72,14 +75,18 @@ public class LuckyController extends BaseController{
                 history.setCreateTime(sdf.format(new Date()));
                 log.info("中奖项：" + GoodsTransition.transition(luckyType));
                 luckyHistoryService.save(history);
+                //抽奖减10分
+                list.get(0).setIntegral(integral - 10);
             }
             //积分类奖品  +15积分  10积分抽一次奖 -10积分
             else if(luckyType.equals("1")) {
                 list.get(0).setIntegral(integral + 15 - 10);
+                list.get(0).setTotalIntegral(totalIntegral + 5);
             }
             //积分类奖品  +100积分  10积分抽一次奖 -10积分
             else if(luckyType.equals("6")) {
                 list.get(0).setIntegral(integral + 100 - 10);
+                list.get(0).setTotalIntegral(totalIntegral + 90);
             }
             //未中奖 10积分抽一次奖 -10积分
             else {

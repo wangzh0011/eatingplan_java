@@ -50,7 +50,9 @@ public class WxAppShareInfoController extends BaseController{
             } else {
                 if(shareNum <= 50) {
                     int integral = list.get(0).getIntegral();
+                    int totalIntegral = list.get(0).getTotalIntegral();
                     list.get(0).setIntegral(integral + 1);
+                    list.get(0).setTotalIntegral(totalIntegral + 1);
                     luckyService.update(list.get(0));
                 }
             }
@@ -72,6 +74,7 @@ public class WxAppShareInfoController extends BaseController{
         int notPayNum = wxAppShareInfoService.query(shareuid,"N").size();//未支付
         //查询积分
         int integral = 0;
+        int totalIntegral = 0;//累计获得的积分
         int times = 0;
         List<Lucky> list = luckyService.query(shareuid);
         int luckyNum = list.size();
@@ -83,9 +86,10 @@ public class WxAppShareInfoController extends BaseController{
             list = luckyService.query(shareuid);
         } else {
             integral = list.get(0).getIntegral();
+            totalIntegral = list.get(0).getTotalIntegral();
             times = list.get(0).getTimes();
             //如果积分数大于100 则拥有代理权限
-            if(integral > 100) {
+            if(totalIntegral > 100) {
                 list.get(0).setCanAgent("Y");
                 luckyService.update(list.get(0));
             }

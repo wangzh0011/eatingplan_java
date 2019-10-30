@@ -110,7 +110,7 @@ public class AppPayController extends BaseController{
         payOrderService.save(order);
 
         //更新分享表的支付信息
-        List<WxAppShareInfo> list = wxAppShareInfoService.query(order.getUid());
+        List<WxAppShareInfo> list = wxAppShareInfoService.queryUid(order.getUid());
         if(list.size() > 0 ) {
             list.get(0).setIsPay("Y");//已支付
             wxAppShareInfoService.update(list.get(0));
@@ -120,11 +120,14 @@ public class AppPayController extends BaseController{
             if(luckyList.size() == 0) {//若无抽奖小程序注册信息 则新增   --两个小程序合并之后废弃
                 Lucky lucky = new Lucky(shareUid);
                 lucky.setIntegral(5);
+                lucky.setTotalIntegral(5);
                 luckyService.save(lucky);
             } else {
                 int integral = luckyList.get(0).getIntegral();
+                int totalIntegral = luckyList.get(0).getTotalIntegral();
                 //加积分
                 luckyList.get(0).setIntegral(integral + 5);
+                luckyList.get(0).setTotalIntegral(totalIntegral + 5);
                 if(luckyList.get(0).getIsAgent().equals("Y")) {
                     int money = luckyList.get(0).getMoney();
                     //加佣金

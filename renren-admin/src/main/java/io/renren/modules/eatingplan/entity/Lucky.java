@@ -11,7 +11,9 @@ public class Lucky {
 
     private Long uid;
 
-    private int integral;//总积分
+    private int integral;//积分
+
+    private int totalIntegral;//累计获得的积分
 
     private int times;//已抽奖次数
 
@@ -22,6 +24,14 @@ public class Lucky {
     private int money;//佣金
 
     private String createTime;
+
+    public int getTotalIntegral() {
+        return totalIntegral;
+    }
+
+    public void setTotalIntegral(int totalIntegral) {
+        this.totalIntegral = totalIntegral;
+    }
 
     public String getCreateTime() {
         return createTime;
