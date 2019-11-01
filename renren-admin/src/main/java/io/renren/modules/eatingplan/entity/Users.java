@@ -23,6 +23,8 @@ public class Users {
 
     private String createTime;
 
+    private String lastLoginTime;
+
     private String food;//每日应摄入总量
 
     private String avatarUrl;
@@ -34,6 +36,14 @@ public class Users {
     private String city;
 
     private String country;
+
+    public String getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(String lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
 
     public String getAvatarUrl() {
         return avatarUrl;

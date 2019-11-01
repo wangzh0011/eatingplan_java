@@ -48,6 +48,9 @@ public class UserInfoController extends BaseController{
         Users user = new Users();
         if (users.size() > 0) {
             user = users.get(0);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            user.setLastLoginTime(sdf.format(new Date()));
+            usersInfoService.update(user);
         }else {//注册
             user.setOpenid(openId);
             user = registerUser(user);
@@ -74,7 +77,10 @@ public class UserInfoController extends BaseController{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         user.setCreateTime(sdf.format(new Date()));
         usersInfoService.save(user);//保存user信息
-        return usersInfoService.query(user.getOpenid()).get(0);
+        user = usersInfoService.query(user.getOpenid()).get(0);
+        user.setJkId(user.getId());
+        usersInfoService.update(user);
+        return user;
     }
 
     /**
