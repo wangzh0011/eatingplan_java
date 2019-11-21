@@ -5,9 +5,9 @@
 		<version>4.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>renren-admin</artifactId>
-	<packaging>jar</packaging>
-	<description>renren-admin</description>
+	<artifactId>eatingplan</artifactId>
+	<packaging>war</packaging>
+	<description>eatingplan</description>
 
 	<properties>
 		<quartz.version>2.3.0</quartz.version>
@@ -122,6 +122,19 @@
 			<version>2.4</version>
 			<classifier>jdk15</classifier>
 		</dependency>
+
+		<!--部署成war包时开启↓↓↓↓-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!--部署成war包时开启↑↑↑↑-->
 
 	</dependencies>
 

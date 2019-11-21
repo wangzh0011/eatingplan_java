@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
-@RequestMapping("/eatingplan")
+@RequestMapping("/")
 public class AppPayController extends BaseController{
 
     @Autowired

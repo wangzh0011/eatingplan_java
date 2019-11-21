@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/eatingplan")
+@RequestMapping("/")
 public class UserInfoController extends BaseController{
 
     @Autowired

@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
-@RequestMapping("/eatingplan")
+@RequestMapping("/")
 public class WxAppShareInfoController extends BaseController{
 
     @Autowired
