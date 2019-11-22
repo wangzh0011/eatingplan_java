@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/eatingplan")
 public class QcCodeController extends BaseController{
 
     @Value("${img.location}")

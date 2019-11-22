@@ -5,9 +5,9 @@
 		<version>4.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>eatingplan</artifactId>
+	<artifactId>admin</artifactId>
 	<packaging>war</packaging>
-	<description>eatingplan</description>
+	<description>admin</description>
 
 	<properties>
 		<quartz.version>2.3.0</quartz.version>

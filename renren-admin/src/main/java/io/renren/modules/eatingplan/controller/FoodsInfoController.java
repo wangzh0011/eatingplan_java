@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/eatingplan")
 public class FoodsInfoController {
 
     @Autowired
