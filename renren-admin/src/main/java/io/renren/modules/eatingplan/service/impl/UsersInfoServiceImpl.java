@@ -21,6 +21,11 @@ import java.util.List;
 @Service
 public class UsersInfoServiceImpl extends ServiceImpl<UsersInfoDao, Users> implements UsersInfoService {
 
+	@Override
+	public List<Users> queryByUserName(String userName) {
+		List<Users> user = baseMapper.selectList(new QueryWrapper<Users>().eq("user_name",userName));
+		return user;
+	}
 
 	@Override
 	public List<Users> query(String openid) {

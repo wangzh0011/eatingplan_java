@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface UsersInfoService extends IService<Users> {
 
+    List<Users> queryByUserName(String userName);
+
     List<Users> query(String openid);
 
     List<Users> queryByUid(Long uid);
