@@ -24,11 +24,11 @@ public class UserInfoController_H5 extends BaseController{
      * @return
      */
     @RequestMapping("/login")
-    public R login(String userName){
+    public R login(String userName,Long shareUid){
 
         Map map = new HashMap<>();
 
-        //保存openID到数据库
+        //保存用户信息到数据库
         List<Users> users = usersInfoService.queryByUserName(userName);
         Users user = new Users();
 
@@ -41,7 +41,13 @@ public class UserInfoController_H5 extends BaseController{
             isNewUser = "N";
 
         }else {//注册
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            user.setCreateTime(sdf.format(new Date()));
             user.setUserName(userName);
+            //设置分享者id
+            if(shareUid != null) {
+                user.setShareUid(shareUid);
+            }
             user = registerUser(user);
             isNewUser = "Y";
         }
@@ -55,11 +61,7 @@ public class UserInfoController_H5 extends BaseController{
      * @param user
      */
     public Users registerUser(Users user) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        user.setCreateTime(sdf.format(new Date()));
-        //uuid随机数
-        String secretId = UUID.randomUUID().toString().replace("-","");
-        user.setSecretId(secretId);
+
         usersInfoService.save(user);//保存user信息
         user = usersInfoService.query(user.getOpenid()).get(0);
         return user;

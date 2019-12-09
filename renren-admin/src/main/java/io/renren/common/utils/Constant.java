@@ -120,7 +120,7 @@ public class Constant {
     }
 
 
-    /**小程序相关信息**/
+    /**小程序相关信息 begin**/
     //appid
     public static String AppId_JK ="wxf818611b94a0c6fe";
     //appsecret
@@ -137,6 +137,14 @@ public class Constant {
     public static String notifyUrl = "https://fangqie.top";
     //交易类型
     public static String tradeType = "JSAPI";
+    /**end**/
+
+    /**H5相关信息**/
+    //appid
+    public static String AppId_H5 ="";
+    //交易类型 h5
+    public static String tradeType_h5 = "MWEB";
+
 
     //请求微信接口的方式
     public final static String POST = "POST";

@@ -19,6 +19,15 @@ public class UnifiedorderParameter {
     private String notify_url;      //通知地址
     private String trade_type ;     //交易类型  JSAPI
     private String openid  ;        //用户标识
+    private String scene_info;      //场景信息
+
+    public String getScene_info() {
+        return scene_info;
+    }
+
+    public void setScene_info(String scene_info) {
+        this.scene_info = scene_info;
+    }
 
     public String getAppid() {
         return appid;

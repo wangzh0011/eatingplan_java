@@ -15,7 +15,7 @@ public class Users {
 
     private String nickName;
 
-    private String type; // 0：用户 1：流量商
+    private String type = "0"; // 0：用户 1：流量商
 
     private Long jkId; //来源为健康计划的userID
 
@@ -37,18 +37,18 @@ public class Users {
 
     private String country;
 
-    private String status;// 0：未完成指引  1：已完成指引
+    private String status = "0";// 0：未完成指引  1：已完成指引
 
-    private String isPay; // Y:已支付  N：未支付
+    private String isPay = "N"; // Y:已支付  N：未支付
 
-    private String secretId;//用于分享时区别用户
+    private Long shareUid;//分享者id
 
-    public String getSecretId() {
-        return secretId;
+    public Long getShareUid() {
+        return shareUid;
     }
 
-    public void setSecretId(String secretId) {
-        this.secretId = secretId;
+    public void setShareUid(Long shareUid) {
+        this.shareUid = shareUid;
     }
 
     public String getIsPay() {
