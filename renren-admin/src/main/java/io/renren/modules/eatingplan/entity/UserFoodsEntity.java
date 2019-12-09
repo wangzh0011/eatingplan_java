@@ -19,6 +19,16 @@ public class UserFoodsEntity implements Serializable {
 
     private String createTime;
 
+    private int myReport = 1;//第几份报告  默认为1
+
+    public int getMyReport() {
+        return myReport;
+    }
+
+    public void setMyReport(int myReport) {
+        this.myReport = myReport;
+    }
+
     public Long getId() {
         return id;
     }

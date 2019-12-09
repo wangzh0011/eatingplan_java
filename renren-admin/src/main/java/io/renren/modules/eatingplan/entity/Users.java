@@ -15,7 +15,7 @@ public class Users {
 
     private String nickName;
 
-    private String type; //用户登录来源  jk 健康计划  fq  赚番茄
+    private String type; // 0：用户 1：流量商
 
     private Long jkId; //来源为健康计划的userID
 
@@ -36,6 +36,36 @@ public class Users {
     private String city;
 
     private String country;
+
+    private String status;// 0：未完成指引  1：已完成指引
+
+    private String isPay; // Y:已支付  N：未支付
+
+    private String secretId;//用于分享时区别用户
+
+    public String getSecretId() {
+        return secretId;
+    }
+
+    public void setSecretId(String secretId) {
+        this.secretId = secretId;
+    }
+
+    public String getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(String isPay) {
+        this.isPay = isPay;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getLastLoginTime() {
         return lastLoginTime;

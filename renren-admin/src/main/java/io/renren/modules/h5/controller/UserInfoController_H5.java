@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/h5")
@@ -60,6 +57,9 @@ public class UserInfoController_H5 extends BaseController{
     public Users registerUser(Users user) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         user.setCreateTime(sdf.format(new Date()));
+        //uuid随机数
+        String secretId = UUID.randomUUID().toString().replace("-","");
+        user.setSecretId(secretId);
         usersInfoService.save(user);//保存user信息
         user = usersInfoService.query(user.getOpenid()).get(0);
         return user;
