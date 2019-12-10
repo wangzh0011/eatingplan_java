@@ -16,20 +16,41 @@ public class UserBaseInfoController {
     @Autowired
     private UserBaseInfoService userBaseInfoService;
 
+    /**
+     * 保存用户基础信息
+     * @param userBase
+     * @return
+     */
     @RequestMapping("/saveUserBaseInfo")
-    public R saveUserBaseInfo(UserBaseInfo user) {
-        if(user == null) {
+    public R saveUserBaseInfo(UserBaseInfo userBase) {
+        if(userBase == null) {
             return R.error("未获取到用户信息");
         }
 
-        List list = userBaseInfoService.queryByUid(user.getUid());
+        List list = userBaseInfoService.queryByUid(userBase.getUid());
         if(list.size() > 0) {
-            userBaseInfoService.update(user);
+            userBaseInfoService.update(userBase);
         } else {
-            userBaseInfoService.save(user);
+            userBaseInfoService.save(userBase);
         }
 
         return R.ok();
+    }
+
+    /**
+     * 获取信息
+     * @param uid
+     * @return
+     */
+    @RequestMapping("/getUserBaseInfo")
+    public R getUserBaseInfo(Long uid) {
+        List<UserBaseInfo> list = userBaseInfoService.queryByUid(uid);
+        if(list.size() > 0) {
+            UserBaseInfo userBase = list.get(0);
+            return R.ok().put("userBase",userBase);
+        }
+
+        return R.error("无uid=" + uid + "对应的信息");
     }
 
 }

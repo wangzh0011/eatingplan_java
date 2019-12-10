@@ -30,7 +30,7 @@ public class FoodsInfoController_H5 {
      * @param uid
      */
     @RequestMapping("/saveUserFoods")
-    public void saveUserFoods(@RequestParam("breakfastArray") List breakfastArray,
+    public R saveUserFoods(@RequestParam("breakfastArray") List breakfastArray,
                               @RequestParam("lunchArray") List lunchArray,
                               @RequestParam("dinnerArray") List dinnerArray,Long uid)
     {
@@ -60,6 +60,9 @@ public class FoodsInfoController_H5 {
         List<UserFoodsEntity> list = userFoodsService.queryFoodsInfo(uid);
         //设置第N份报告
         if(list.size() > 0) {
+            if(list.size() > 6) {
+                return R.error("亲，您已达到可购买的最大数量");
+            }
             int myReport = list.get(0).getMyReport() + 1;
             breakfast.setMyReport(myReport);
             lunch.setMyReport(myReport);
@@ -69,6 +72,8 @@ public class FoodsInfoController_H5 {
         userFoodsService.saveConfig(breakfast);
         userFoodsService.saveConfig(lunch);
         userFoodsService.saveConfig(dinner);
+
+        return R.ok();
     }
 
     /**

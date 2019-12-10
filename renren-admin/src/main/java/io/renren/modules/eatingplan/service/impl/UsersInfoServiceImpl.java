@@ -50,8 +50,11 @@ public class UsersInfoServiceImpl extends ServiceImpl<UsersInfoDao, Users> imple
 	}
 
 	@Override
-	public void update(Users user) {
-		baseMapper.updateById(user);
+	public boolean update(Users user) {
+
+		if(baseMapper.updateById(user) == 1) return true;
+
+		return false;
 	}
 
 

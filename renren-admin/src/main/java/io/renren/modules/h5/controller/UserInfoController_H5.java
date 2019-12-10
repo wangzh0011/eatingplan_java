@@ -6,6 +6,7 @@ import io.renren.modules.eatingplan.entity.Users;
 import io.renren.modules.eatingplan.service.UsersInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
@@ -23,7 +24,7 @@ public class UserInfoController_H5 extends BaseController{
      * @param userName
      * @return
      */
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public R login(String userName,Long shareUid){
 
         Map map = new HashMap<>();
@@ -62,7 +63,7 @@ public class UserInfoController_H5 extends BaseController{
     public Users registerUser(Users user) {
 
         usersInfoService.save(user);//保存user信息
-        user = usersInfoService.query(user.getOpenid()).get(0);
+        user = usersInfoService.queryByUserName(user.getUserName()).get(0);
         return user;
     }
 
@@ -71,8 +72,11 @@ public class UserInfoController_H5 extends BaseController{
      * @param user
      */
     @RequestMapping("/updateUser")
-    public void updateUser(Users user) {
-        usersInfoService.update(user);
+    public R updateUser(Users user) {
+
+        if(usersInfoService.update(user)) return R.ok();
+
+        return R.error();
     }
 
 

@@ -55,7 +55,7 @@ public class AppPayController_H5 extends BaseController{
      * @return
      */
     @RequestMapping("/pay")
-    public R getPayParameter(String uid, HttpServletRequest request){
+    public R getPayParameter(Long uid, String type, String totalFee, HttpServletRequest request){
 
         Double rmb_double = Double.valueOf(sysConfigService.getValue("RMB_H5")) * 100;
 
@@ -98,6 +98,20 @@ public class AppPayController_H5 extends BaseController{
             log.info("调用统一接口返回结果：" + xmlStr);
             prepayId = XmlUtil.getXmlAttribute(xmlStr,"prepay_id");
             log.info("prepayId:" + prepayId);
+
+            //支付成功后，根据type更新用户表  待确认支付成功状态
+            List<Users> list = usersInfoService.queryByUid(uid);
+            Users user = list.get(0);
+            if("agent".equals(type)) {
+                user.setType(Constant.AGENT);
+                user.setBeAgentTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            } else if("partner".equals(type)) {
+                user.setType(Constant.PARTNER);
+                user.setBePartnerTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            }
+            user.setIsPay("Y");
+            usersInfoService.update(user);
+
 
         } catch (Exception e) {
             e.printStackTrace();
