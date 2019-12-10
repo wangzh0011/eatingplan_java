@@ -33,15 +33,14 @@ public class UserInfoController_H5 extends BaseController{
         Users user = new Users();
 
         String isNewUser = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (users.size() > 0) {
             user = users.get(0);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             user.setLastLoginTime(sdf.format(new Date()));
             usersInfoService.update(user);
             isNewUser = "N";
 
         }else {//注册
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             user.setCreateTime(sdf.format(new Date()));
             user.setUserName(userName);
             //设置分享者id

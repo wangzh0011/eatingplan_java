@@ -3,9 +3,9 @@ package io.renren.modules.h5.controller;
 import io.renren.common.utils.*;
 import io.renren.modules.eatingplan.controller.BaseController;
 import io.renren.modules.eatingplan.entity.*;
-import io.renren.modules.eatingplan.service.LuckyService;
 import io.renren.modules.eatingplan.service.PayOrderService;
-import io.renren.modules.eatingplan.service.WxAppShareInfoService;
+import io.renren.modules.eatingplan.service.UsersInfoService;
+import io.renren.modules.h5.service.IncomeHistoryService;
 import io.renren.modules.sys.service.SysConfigService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +36,26 @@ public class AppPayController_H5 extends BaseController{
     private PayOrderService payOrderService;
 
     @Autowired
-    private WxAppShareInfoService wxAppShareInfoService;
+    private UsersInfoService usersInfoService;
 
     @Autowired
-    private LuckyService luckyService;
+    private IncomeHistoryService incomeHistoryService;
+
+
+    //获取系统配置
+    String menberPercent = sysConfigService.getValue("memberPercent");//样例  60;0;0;0   ==>  直接受益 二级代理 三级代理 开通条件
+    String agentPercent = sysConfigService.getValue("agentPercent");
+    String partnerPercent = sysConfigService.getValue("partnerPercent");
+    String channelPercent = sysConfigService.getValue("channelPercent");
 
     /**
      * 发起支付
-     * @param openId
+     * @param uid
      * @param request
      * @return
      */
     @RequestMapping("/pay")
-    public R getPayParameter(String openId, HttpServletRequest request){
+    public R getPayParameter(String uid, HttpServletRequest request){
 
         Double rmb_double = Double.valueOf(sysConfigService.getValue("RMB_H5")) * 100;
 
@@ -101,7 +108,7 @@ public class AppPayController_H5 extends BaseController{
     }
 
     /**
-     * 保存支付记录
+     * 保存支付记录 并给上级代理加佣金
      * @param order
      */
     @RequestMapping("/savePayOrder")
@@ -111,33 +118,11 @@ public class AppPayController_H5 extends BaseController{
         order.setCreateTime(sdf.format(new Date()));
         payOrderService.save(order);
 
-        //更新分享表的支付信息
-        List<WxAppShareInfo> list = wxAppShareInfoService.queryUid(order.getUid());
-        if(list.size() > 0 ) {
-            list.get(0).setIsPay("Y");//已支付
-            wxAppShareInfoService.update(list.get(0));
-            //为分享者加积分
-            Long shareUid = list.get(0).getShareuid();
-            List<Lucky> luckyList = luckyService.query(shareUid);
-            if(luckyList.size() == 0) {//若无抽奖小程序注册信息 则新增   --两个小程序合并之后废弃
-                Lucky lucky = new Lucky(shareUid);
-                lucky.setIntegral(lucky.getIntegral() + 5);
-                lucky.setTotalIntegral(lucky.getTotalIntegral() + 5);
-                luckyService.save(lucky);
-            } else {
-                int integral = luckyList.get(0).getIntegral();
-                int totalIntegral = luckyList.get(0).getTotalIntegral();
-                //加积分
-                luckyList.get(0).setIntegral(integral + 5);
-                luckyList.get(0).setTotalIntegral(totalIntegral + 5);
-                if(luckyList.get(0).getIsAgent().equals("Y")) {
-                    int money = luckyList.get(0).getMoney();
-                    //加佣金
-                    luckyList.get(0).setMoney(money + 5);
-                }
-                luckyService.update(luckyList.get(0));
-            }
-        }
+        //查询userinfo
+        List<Users> list = usersInfoService.queryByUid(order.getUid());
+        //计算佣金
+        setIncome(list,order.getTotalFee(),0);
+
     }
 
     /**
@@ -152,6 +137,67 @@ public class AppPayController_H5 extends BaseController{
             return true;
         }
         return false;
+    }
+
+    /**
+     * 给上级代理计算佣金
+     * @param list
+     */
+    public void setIncome(List<Users> list,String money,int i) {
+
+        if(i > 2) {
+            return;
+        }
+
+        Long shareUid = list.get(0).getShareUid();
+        //若shareUidD不为空则给对应的用户增加佣金
+        if(shareUid != null) {
+            //查询shareUid的用户类型
+            List<Users> listPar = usersInfoService.queryByUid(shareUid);
+            String typePar = listPar.get(0).getType();
+            Double income = null;
+            if(Constant.MEMBER.equals(typePar)) {
+                //会员
+                String[] memberPercents = menberPercent.split(";");
+                Double percent = Double.valueOf(memberPercents[i]) / 100;//受益百分比
+                //计算受益
+                income = Double.valueOf(money) * percent ;
+
+
+            } else if(Constant.AGENT.equals(typePar)) {
+                //代理
+                String[] agentPercents = agentPercent.split(";");
+                Double percent = Double.valueOf(agentPercents[i]) / 100;//受益百分比
+                //计算受益
+                income = Double.valueOf(money) * percent ;
+
+
+            } else if(Constant.PARTNER.equals(typePar)) {
+                //合伙人
+                String[] partnerPercents = partnerPercent.split(";");
+                Double percent = Double.valueOf(partnerPercents[i]) / 100;//受益百分比
+                //计算受益
+               income = Double.valueOf(money) * percent ;
+
+
+            } else if(Constant.CHANNEL.equals(typePar)) {
+                //渠道伙伴
+                String[] channelPercents = channelPercent.split(";");
+                Double percent = Double.valueOf(channelPercents[i]) / 100;//受益百分比
+                //计算受益
+               income = Double.valueOf(money) * percent ;
+
+            } else {
+                return;
+            }
+
+            //存入数据库
+            String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            IncomeHistory incomeHistory = new IncomeHistory(shareUid,list.get(0).getId(),income,String.valueOf(i),createTime);
+            incomeHistoryService.save(incomeHistory);
+            //上级代理
+            setIncome(listPar,money,i+1);
+        }
     }
 
 

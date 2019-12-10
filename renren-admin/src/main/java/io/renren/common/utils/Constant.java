@@ -161,4 +161,12 @@ public class Constant {
     //https://api.weixin.qq.com/wxa/getwxacode?access_token=ACCESS_TOKEN
     //https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=ACCESS_TOKEN
     public final static String WXACODE_URL = "https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=ACCESS_TOKEN";
+
+
+    //用户类型
+    public final static String MEMBER = "2";//会员
+    public final static String AGENT = "3";//代理
+    public final static String PARTNER = "4";//合伙人
+    public final static String CHANNEL = "5";//渠道伙伴
+
 }

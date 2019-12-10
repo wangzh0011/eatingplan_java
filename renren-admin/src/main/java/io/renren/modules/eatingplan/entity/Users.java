@@ -15,7 +15,7 @@ public class Users {
 
     private String nickName;
 
-    private String type = "0"; // 0：用户 1：流量商
+    private String type = "0"; // 0：用户 1：流量商 2：会员 3：代理 4：合伙人 5：渠道伙伴
 
     private Long jkId; //来源为健康计划的userID
 
@@ -42,6 +42,26 @@ public class Users {
     private String isPay = "N"; // Y:已支付  N：未支付
 
     private Long shareUid;//分享者id
+
+    private String beAgentTime;
+
+    private String bePartnerTime;
+
+    public String getBeAgentTime() {
+        return beAgentTime;
+    }
+
+    public void setBeAgentTime(String beAgentTime) {
+        this.beAgentTime = beAgentTime;
+    }
+
+    public String getBePartnerTime() {
+        return bePartnerTime;
+    }
+
+    public void setBePartnerTime(String bePartnerTime) {
+        this.bePartnerTime = bePartnerTime;
+    }
 
     public Long getShareUid() {
         return shareUid;
