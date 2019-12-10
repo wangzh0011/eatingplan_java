@@ -25,6 +25,8 @@ public class IncomeHistoryController {
 
         }
 
+        return R.ok();
+
     }
 
 
