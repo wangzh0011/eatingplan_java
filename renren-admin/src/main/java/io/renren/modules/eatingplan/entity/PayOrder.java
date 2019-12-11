@@ -20,7 +20,27 @@ public class PayOrder {
 
     private String totalFee;//订单金额
 
+    private String type;//支付类型  agent:申请为代理  partner:申请为合伙人  report:报告  tool:热量溢出工具
+
+    private String status;//订单状态 0：未支付 1：已支付
+
     private String createTime;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getCreateTime() {
         return createTime;

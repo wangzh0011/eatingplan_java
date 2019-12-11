@@ -59,8 +59,9 @@ public class AppPayController_H5 extends BaseController{
      * @return
      */
     @RequestMapping("/pay")
-    public R getPayParameter(Long uid, String type, String totalFee, HttpServletRequest request){
+    public R getPayParameter(Long uid, String totalFee, String type, HttpServletRequest request){
 
+        //根据type获取系统设置的支付金额  比较前台传入的金额和后台设置的金额
         Double rmb_double = Double.valueOf(sysConfigService.getValue("RMB_H5")) * 100;
 
         Integer rmb = rmb_double.intValue();
@@ -69,13 +70,15 @@ public class AppPayController_H5 extends BaseController{
 
         String nonceStr = UUID.randomUUID().toString().replace("-","");
 
+        String tradeNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + Math.round(Math.random()*899+100);
+
         //设置统一下单参数
         UnifiedorderParameter unifiedorder = new UnifiedorderParameter();
         unifiedorder.setAppid(Constant.AppId_H5);
         unifiedorder.setMch_id(Constant.mchId);
         unifiedorder.setNonce_str(nonceStr);
         unifiedorder.setBody("支付减脂杀手");
-        unifiedorder.setOut_trade_no(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + Math.round(Math.random()*899+100));
+        unifiedorder.setOut_trade_no(tradeNo);
         unifiedorder.setTotal_fee(rmb);
         unifiedorder.setSpbill_create_ip(IPUtils.getIpAddr(request));
         unifiedorder.setNotify_url(Constant.notifyUrl);
@@ -103,26 +106,33 @@ public class AppPayController_H5 extends BaseController{
             prepayId = XmlUtil.getXmlAttribute(xmlStr,"prepay_id");
             log.info("prepayId:" + prepayId);
 
-            //支付成功后，根据type更新用户表  *********待确认支付成功状态
-            List<Users> list = usersInfoService.queryByUid(uid);
-            Users user = list.get(0);
-            if("agent".equals(type)) {
-                user.setType(Constant.AGENT);
-                user.setBeAgentTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            } else if("partner".equals(type)) {
-                user.setType(Constant.PARTNER);
-                user.setBePartnerTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            }
-            user.setIsPay("Y");
-            usersInfoService.update(user);
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        //获取H5调取支付接口所需参数
+        PayParameter pay = new PayParameter();
+        pay.setNonceStr(nonceStr);
+        pay.setPackage_pay("prepay_id=" + prepayId);
+        pay.setSingTpye("MD5");
+        pay.setTimeStamp(timeStamp);
 
-        return R.ok();
+        pay = getPayRequestParameter(pay);
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //新建订单
+        PayOrder order = new PayOrder();
+        order.setUid(uid);
+        order.setTotalFee(totalFee);
+        order.setType(type);
+        order.setTradeNo(tradeNo);
+        order.setStatus("0");
+        order.setCreateTime(sdf.format(new Date()));
+        payOrderService.save(order);
+
+        return R.ok().put("payParameter",pay).put("appId",Constant.AppId_H5).put("tradeNo",tradeNo);
     }
 
     /**
@@ -130,16 +140,35 @@ public class AppPayController_H5 extends BaseController{
      * @param order
      */
     @RequestMapping("/savePayOrder")
-    public void savePayOrder (PayOrder order) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //支付记录
-        order.setCreateTime(sdf.format(new Date()));
-        payOrderService.save(order);
+    public R savePayOrder (PayOrder order) {
+
+        List<PayOrder> orderList = payOrderService.queryByTradeNo(order.getTradeNo());
+        if(orderList.size() == 0) {
+            log.info("订单号" + order.getTradeNo() + "不存在");
+            return R.error("订单号" + order.getTradeNo() + "不存在");
+        }
+        orderList.get(0).setStatus("1");//已支付
+        payOrderService.update(orderList.get(0));
+
+        //支付成功后，根据type更新用户表  *********待确认支付成功状态
+        List<Users> list = usersInfoService.queryByUid(order.getUid());
+        Users user = list.get(0);
+        if("agent".equals(order.getType())) {
+            user.setType(Constant.AGENT);
+            user.setBeAgentTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        } else if("partner".equals(order.getType())) {
+            user.setType(Constant.PARTNER);
+            user.setBePartnerTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        }
+        user.setIsPay("Y");
+        usersInfoService.update(user);
 
         //查询userinfo
-        List<Users> list = usersInfoService.queryByUid(order.getUid());
+        List<Users> usersList = usersInfoService.queryByUid(order.getUid());
         //计算佣金
-        setIncome(list,order.getTotalFee(),0);
+        setIncome(usersList,order.getTotalFee(),0);
+
+        return R.ok();
 
     }
 
@@ -155,6 +184,27 @@ public class AppPayController_H5 extends BaseController{
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取H5所需参数
+     * @param pay
+     * @return
+     */
+    public PayParameter getPayRequestParameter(PayParameter pay){
+
+        SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();
+
+        parameters.put("appId", Constant.AppId_JK);
+        parameters.put("timeStamp", pay.getTimeStamp());
+        parameters.put("nonceStr", pay.getNonceStr());
+        parameters.put("package", pay.getPackage_pay());
+        parameters.put("signType", pay.getSingTpye());
+        //数据签名
+        String paySign = createPaySign(parameters,Constant.key);
+        pay.setPaySign(paySign);
+
+        return pay;
     }
 
     /**
