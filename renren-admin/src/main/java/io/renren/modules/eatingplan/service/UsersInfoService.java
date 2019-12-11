@@ -14,6 +14,10 @@ public interface UsersInfoService extends IService<Users> {
 
     List<Users> queryByUid(Long uid);
 
+    List<Users> queryByShareUid(Long shareUid);
+
+    List<Users> queryByShareUidAndDate(Long shareUid,String date);
+
     /**
      * 保存配置信息
      */

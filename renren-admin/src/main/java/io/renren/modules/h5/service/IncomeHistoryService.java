@@ -12,6 +12,8 @@ public interface IncomeHistoryService extends IService<IncomeHistory> {
 
     List<IncomeHistory> queryByUid(Long uid);
 
+    List<IncomeHistory> queryByUidAndDate(Long uid,String date);
+
     /**
      * 保存配置信息
      */

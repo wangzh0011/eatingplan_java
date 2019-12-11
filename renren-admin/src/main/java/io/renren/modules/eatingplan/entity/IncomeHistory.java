@@ -15,14 +15,25 @@ public class IncomeHistory {
 
     private String type; //0：直接收益 1：二级代理 2:三级代理
 
+    private String status; //+:收入  -:支出
+
     private String createTime;
 
-    public IncomeHistory(Long uid, Long agentUid, Double income, String type, String createTime) {
+    public IncomeHistory(Long uid, Long agentUid, Double income, String type, String createTime, String status) {
         this.uid = uid;
         this.agentUid = agentUid;
         this.income = income;
         this.type = type;
         this.createTime = createTime;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Long getId() {

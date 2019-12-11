@@ -169,4 +169,13 @@ public class Constant {
     public final static String PARTNER = "4";//合伙人
     public final static String CHANNEL = "5";//渠道伙伴
 
+    //收入和支付状态
+    public final static String INCOME = "+";
+    public final static String COST = "-";
+
+    //收益类型
+    public final static String ONE = "0";//直接收益
+    public final static String TWO = "1";//二级代理收益
+    public final static String THREE = "2";//三级代理收益
+
 }

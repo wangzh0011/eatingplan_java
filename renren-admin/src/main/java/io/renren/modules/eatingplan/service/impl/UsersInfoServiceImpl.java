@@ -44,6 +44,25 @@ public class UsersInfoServiceImpl extends ServiceImpl<UsersInfoDao, Users> imple
 	}
 
 	@Override
+	public List<Users> queryByShareUid(Long shareUid) {
+
+		List<Users> user = baseMapper.selectList(new QueryWrapper<Users>().eq("share_uid",shareUid));
+
+		return user;
+	}
+
+	@Override
+	public List<Users> queryByShareUidAndDate(Long shareUid,String date) {
+
+		List<Users> user = baseMapper.selectList(new QueryWrapper<Users>()
+				.eq("share_uid",shareUid)
+				.like("be_agent_time",date)
+		);
+
+		return user;
+	}
+
+	@Override
 	public boolean save(Users user) {
 		baseMapper.insert(user);
 		return true;

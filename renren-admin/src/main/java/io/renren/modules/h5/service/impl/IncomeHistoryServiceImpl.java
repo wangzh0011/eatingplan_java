@@ -34,6 +34,17 @@ public class IncomeHistoryServiceImpl extends ServiceImpl<IncomeHistoryDao, Inco
 	}
 
 	@Override
+	public List<IncomeHistory> queryByUidAndDate(Long uid,String date) {
+
+		List<IncomeHistory> income = baseMapper.selectList(new QueryWrapper<IncomeHistory>()
+				.eq("uid",uid)
+				.like("create_time",date)
+		);
+
+		return income;
+	}
+
+	@Override
 	public boolean save(IncomeHistory income) {
 		baseMapper.insert(income);
 		return true;

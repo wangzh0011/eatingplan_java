@@ -5,6 +5,7 @@ import io.renren.modules.eatingplan.controller.BaseController;
 import io.renren.modules.eatingplan.entity.*;
 import io.renren.modules.eatingplan.service.PayOrderService;
 import io.renren.modules.eatingplan.service.UsersInfoService;
+import io.renren.modules.h5.service.AccountService;
 import io.renren.modules.h5.service.IncomeHistoryService;
 import io.renren.modules.sys.service.SysConfigService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -40,6 +41,9 @@ public class AppPayController_H5 extends BaseController{
 
     @Autowired
     private IncomeHistoryService incomeHistoryService;
+
+    @Autowired
+    private AccountService accountService;
 
 
     //获取系统配置
@@ -99,7 +103,7 @@ public class AppPayController_H5 extends BaseController{
             prepayId = XmlUtil.getXmlAttribute(xmlStr,"prepay_id");
             log.info("prepayId:" + prepayId);
 
-            //支付成功后，根据type更新用户表  待确认支付成功状态
+            //支付成功后，根据type更新用户表  *********待确认支付成功状态
             List<Users> list = usersInfoService.queryByUid(uid);
             Users user = list.get(0);
             if("agent".equals(type)) {
@@ -207,11 +211,53 @@ public class AppPayController_H5 extends BaseController{
 
             //存入数据库
             String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-            IncomeHistory incomeHistory = new IncomeHistory(shareUid,list.get(0).getId(),income,String.valueOf(i),createTime);
+            //记录每一笔收入
+            IncomeHistory incomeHistory = new IncomeHistory(shareUid,list.get(0).getId(),income,String.valueOf(i),createTime,Constant.INCOME);
             incomeHistoryService.save(incomeHistory);
+            //更新我的账户
+            List<Account> accountList = accountService.queryByUid(shareUid);
+            if(accountList.size() > 0) {
+                Double balance = accountList.get(0).getMoney();//余额
+                Double totalIncome = accountList.get(0).getTotalIncome();//总收入
+                if(Constant.ONE.equals(String.valueOf(i))) {
+                    //直接收益
+                    accountList.get(0).setDirectIncome(accountList.get(0).getDirectIncome() + income);
+                } else if (Constant.TWO.equals(String.valueOf(i))) {
+                    //间接收益 二级代理
+                    accountList.get(0).setIndirectIncomeTwo(accountList.get(0).getIndirectIncomeTwo() + income);
+                } else if (Constant.THREE.equals(String.valueOf(i))) {
+                    //间接收益  三级代理
+                    accountList.get(0).setIndirectIncomeThree(accountList.get(0).getIndirectIncomeThree() + income);
+                } else {
+                    log.error("系统错误，setIncome method error!");
+                    return;
+                }
+                accountList.get(0).setMoney(balance + income);//已有余额加上本次收入
+                accountList.get(0).setTotalIncome(totalIncome + income);
+                accountService.update(accountList.get(0));
+            } else {
+                //新建账户
+                Account account = null;
+                if(Constant.ONE.equals(String.valueOf(i))) {
+                    //直接收益
+                    account = new Account(shareUid,income,income,income,0.0,0.0,createTime);
+                } else if (Constant.TWO.equals(String.valueOf(i))) {
+                    //间接收益 二级代理
+                    account = new Account(shareUid,income,income,0.0,income,0.0,createTime);
+                } else if (Constant.THREE.equals(String.valueOf(i))) {
+                    //间接收益  三级代理
+                    account = new Account(shareUid,income,income,0.0,0.0,income,createTime);
+                } else {
+                    log.error("系统错误，setIncome method error!");
+                    return;
+                }
+                accountService.save(account);
+            }
             //上级代理
             setIncome(listPar,money,i+1);
         }
+
+        return;
     }
 
 
