@@ -1,9 +1,11 @@
 package io.renren.modules.eatingplan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.renren.common.utils.PageUtils;
 import io.renren.modules.eatingplan.entity.Users;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface UsersInfoService extends IService<Users> {
@@ -24,5 +26,7 @@ public interface UsersInfoService extends IService<Users> {
     boolean save(Users user);
 
     boolean update(Users user);
+
+    PageUtils queryMyTeamPage(Map<String, Object> params);
 
 }

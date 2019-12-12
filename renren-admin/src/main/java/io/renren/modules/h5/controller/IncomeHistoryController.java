@@ -1,6 +1,7 @@
 package io.renren.modules.h5.controller;
 
 import io.renren.common.utils.Constant;
+import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.eatingplan.entity.Account;
 import io.renren.modules.eatingplan.entity.IncomeHistory;
@@ -10,6 +11,7 @@ import io.renren.modules.h5.service.AccountService;
 import io.renren.modules.h5.service.IncomeHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
@@ -68,6 +70,20 @@ public class IncomeHistoryController {
 
         return R.ok().put("infomations",map);
 
+    }
+
+    @RequestMapping("/getIncomeDetails")
+    public R getIncomeDetails(@RequestParam Map<String, Object> params){
+        PageUtils page = incomeHistoryService.queryPage(params);
+
+        return R.ok().put("page", page);
+    }
+
+    @RequestMapping("/getMyTeamDetails")
+    public R getMyTeamDetails(@RequestParam Map<String, Object> params){
+        PageUtils page = usersInfoService.queryMyTeamPage(params);
+
+        return R.ok().put("page", page);
     }
 
 
