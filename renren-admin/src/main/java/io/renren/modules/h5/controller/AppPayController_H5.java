@@ -46,11 +46,7 @@ public class AppPayController_H5 extends BaseController{
     private AccountService accountService;
 
 
-    //获取系统配置
-    String menberPercent = sysConfigService.getValue("memberPercent");//样例  60;0;0;0   ==>  直接受益 二级代理 三级代理 开通条件
-    String agentPercent = sysConfigService.getValue("agentPercent");
-    String partnerPercent = sysConfigService.getValue("partnerPercent");
-    String channelPercent = sysConfigService.getValue("channelPercent");
+
 
     /**
      * 发起支付
@@ -212,6 +208,12 @@ public class AppPayController_H5 extends BaseController{
      * @param list
      */
     public void setIncome(List<Users> list,String money,int i) {
+
+        //获取系统配置
+        String menberPercent = sysConfigService.getValue("memberPercent");//样例  60;0;0;0   ==>  直接受益 二级代理 三级代理 开通条件
+        String agentPercent = sysConfigService.getValue("agentPercent");
+        String partnerPercent = sysConfigService.getValue("partnerPercent");
+        String channelPercent = sysConfigService.getValue("channelPercent");
 
         if(i > 2) {
             return;

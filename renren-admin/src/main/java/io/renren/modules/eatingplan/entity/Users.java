@@ -47,6 +47,16 @@ public class Users {
 
     private String bePartnerTime;
 
+    private String qcCodeUrl;//收款二维码路径
+
+    public String getQcCodeUrl() {
+        return qcCodeUrl;
+    }
+
+    public void setQcCodeUrl(String qcCodeUrl) {
+        this.qcCodeUrl = qcCodeUrl;
+    }
+
     public String getBeAgentTime() {
         return beAgentTime;
     }
