@@ -27,6 +27,16 @@ public class UserBaseInfo {
 
     private String targetDay;//目标天数
 
+    private String myReport;//第几份报告
+
+    public String getMyReport() {
+        return myReport;
+    }
+
+    public void setMyReport(String myReport) {
+        this.myReport = myReport;
+    }
+
     public Long getId() {
         return id;
     }

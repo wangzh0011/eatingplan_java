@@ -9,6 +9,8 @@ public interface UserFoodsService extends IService<UserFoodsEntity> {
 
     List queryFoodsInfo(Long uid);
 
+    List queryFoodsInfo(Long uid,int myReport);
+
     /**
      * 保存配置信息
      */
@@ -17,7 +19,7 @@ public interface UserFoodsService extends IService<UserFoodsEntity> {
     /**
      * 更新配置信息
      */
-    void update(UserFoodsEntity config);
+    boolean update(UserFoodsEntity config);
 
     /**
      * 根据key，更新value

@@ -178,4 +178,7 @@ public class Constant {
     public final static String TWO = "1";//二级代理收益
     public final static String THREE = "2";//三级代理收益
 
+    //默认第几份报告
+    public final static String DEFAULT_REPORT = "1";
+
 }

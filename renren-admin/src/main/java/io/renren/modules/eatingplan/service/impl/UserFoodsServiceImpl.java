@@ -30,13 +30,23 @@ public class UserFoodsServiceImpl extends ServiceImpl<UserFoodsDao, UserFoodsEnt
 	}
 
 	@Override
+	public List queryFoodsInfo(Long uid,int myReport) {
+		List<UserFoodsEntity> info = baseMapper.selectList(new QueryWrapper<UserFoodsEntity>()
+				.eq("uid",uid)
+				.eq("my_report",myReport));
+		return info;
+	}
+
+	@Override
 	public void saveConfig(UserFoodsEntity config) {
 		this.save(config);
 	}
 
 	@Override
-	public void update(UserFoodsEntity config) {
+	public boolean update(UserFoodsEntity config) {
+		if(baseMapper.updateById(config) == 1) return true;
 
+		return false;
 	}
 
 	@Override

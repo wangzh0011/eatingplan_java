@@ -1,14 +1,16 @@
 package io.renren.modules.h5.controller;
 
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
 import io.renren.modules.eatingplan.controller.BaseController;
+import io.renren.modules.eatingplan.entity.EatingPlan;
 import io.renren.modules.eatingplan.entity.Users;
 import io.renren.modules.eatingplan.service.UsersInfoService;
+import io.renren.modules.h5.service.EatingPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -19,40 +21,60 @@ public class UserInfoController_H5 extends BaseController{
     @Autowired
     private UsersInfoService usersInfoService;
 
+    @Autowired
+    private EatingPlanService eatingPlanService;
+
     /**
      * 登录
-     * @param userName
+     * @param user
      * @return
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public R login(String userName,Long shareUid){
+    @ResponseBody
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    public R login(@RequestBody Users user, HttpServletRequest request){
+
+        //设置session信息
+        String myReport = getSession(request);
 
         Map map = new HashMap<>();
-
+        log.info("传入的userName为：" + user.getUserName() + ",shareUid为：" + user.getShareUid());
         //保存用户信息到数据库
-        List<Users> users = usersInfoService.queryByUserName(userName);
-        Users user = new Users();
+        List<Users> users = usersInfoService.queryByUserName(user.getUserName());
 
         String isNewUser = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        EatingPlan plan = null;
         if (users.size() > 0) {
             user = users.get(0);
             user.setLastLoginTime(sdf.format(new Date()));
             usersInfoService.update(user);
             isNewUser = "N";
 
-        }else {//注册
+            //获取我的计划
+            plan = eatingPlanService.queryByUid(users.get(0).getId(),myReport).get(0);
+
+        }else {
             user.setCreateTime(sdf.format(new Date()));
-            user.setUserName(userName);
             //设置分享者id
-            if(shareUid != null) {
-                user.setShareUid(shareUid);
+            if(user.getShareUid() != null) {
+                user.setShareUid(user.getShareUid());
             }
+
+            //注册
             user = registerUser(user);
+
+            //保存我的计划
+            plan = new EatingPlan(user.getId(),myReport,sdf.format(new Date()),String.valueOf(System.currentTimeMillis()));
+            eatingPlanService.save(plan);
+
             isNewUser = "Y";
         }
 
-        return R.ok().put("userInfo",user).put("isNewUser",isNewUser).put("serverId","1024").put("platformId","666");
+        return R.ok().put("userInfo",user)
+                .put("isNewUser",isNewUser)
+                .put("serverId","1024")
+                .put("platformId","666")
+                .put("plan",plan);
     }
 
 
@@ -73,6 +95,12 @@ public class UserInfoController_H5 extends BaseController{
      */
     @RequestMapping("/updateUser")
     public R updateUser(Users user) {
+
+        List<Users> list = usersInfoService.queryByUid(user.getId());
+
+        if(list.size() == 0) {
+            return R.error("此用户不存在");
+        }
 
         if(usersInfoService.update(user)) return R.ok();
 
