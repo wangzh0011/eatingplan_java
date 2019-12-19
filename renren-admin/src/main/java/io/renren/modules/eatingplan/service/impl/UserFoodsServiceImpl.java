@@ -30,7 +30,7 @@ public class UserFoodsServiceImpl extends ServiceImpl<UserFoodsDao, UserFoodsEnt
 	}
 
 	@Override
-	public List queryFoodsInfo(Long uid,int myReport) {
+	public List queryFoodsInfo(Long uid,String myReport) {
 		List<UserFoodsEntity> info = baseMapper.selectList(new QueryWrapper<UserFoodsEntity>()
 				.eq("uid",uid)
 				.eq("my_report",myReport));

@@ -19,13 +19,63 @@ public class UserFoodsEntity implements Serializable {
 
     private String createTime;
 
-    private int myReport = 1;//第几份报告  默认为1
+    private String myReport;//第几份报告  默认为1
 
-    public int getMyReport() {
+    private String breakfastArray;
+
+    private String lunchArray;
+
+    private String dinnerArray;
+
+    private String snacksArray;
+
+    private String nightsnackArray;
+
+    public String getBreakfastArray() {
+        return breakfastArray;
+    }
+
+    public void setBreakfastArray(String breakfastArray) {
+        this.breakfastArray = breakfastArray;
+    }
+
+    public String getLunchArray() {
+        return lunchArray;
+    }
+
+    public void setLunchArray(String lunchArray) {
+        this.lunchArray = lunchArray;
+    }
+
+    public String getDinnerArray() {
+        return dinnerArray;
+    }
+
+    public void setDinnerArray(String dinnerArray) {
+        this.dinnerArray = dinnerArray;
+    }
+
+    public String getSnacksArray() {
+        return snacksArray;
+    }
+
+    public void setSnacksArray(String snacksArray) {
+        this.snacksArray = snacksArray;
+    }
+
+    public String getNightsnackArray() {
+        return nightsnackArray;
+    }
+
+    public void setNightsnackArray(String nightsnackArray) {
+        this.nightsnackArray = nightsnackArray;
+    }
+
+    public String getMyReport() {
         return myReport;
     }
 
-    public void setMyReport(int myReport) {
+    public void setMyReport(String myReport) {
         this.myReport = myReport;
     }
 

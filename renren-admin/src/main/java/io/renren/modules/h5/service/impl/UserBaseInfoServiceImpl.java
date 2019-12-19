@@ -44,6 +44,16 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
 	}
 
 	@Override
+	public List<UserBaseInfo> queryByUid(Long uid, String myReport) {
+		List<UserBaseInfo> user = baseMapper.selectList(new QueryWrapper<UserBaseInfo>()
+				.eq("uid",uid)
+				.eq("my_report",myReport)
+		);
+
+		return user;
+	}
+
+	@Override
 	public boolean save(UserBaseInfo user) {
 		baseMapper.insert(user);
 		return true;

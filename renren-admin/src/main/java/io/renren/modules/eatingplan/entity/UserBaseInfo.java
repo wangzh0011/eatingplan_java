@@ -29,6 +29,16 @@ public class UserBaseInfo {
 
     private String myReport;//第几份报告
 
+    private String createTime;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public String getMyReport() {
         return myReport;
     }

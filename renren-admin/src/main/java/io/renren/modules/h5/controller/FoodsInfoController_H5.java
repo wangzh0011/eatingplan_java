@@ -3,7 +3,9 @@ package io.renren.modules.h5.controller;
 import io.renren.common.utils.R;
 import io.renren.modules.eatingplan.controller.BaseController;
 import io.renren.modules.eatingplan.entity.UserFoodsEntity;
+import io.renren.modules.eatingplan.entity.Users;
 import io.renren.modules.eatingplan.service.UserFoodsService;
+import io.renren.modules.eatingplan.service.UsersInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,79 +22,40 @@ public class FoodsInfoController_H5 extends BaseController {
     @Autowired
     private UserFoodsService userFoodsService;
 
+    @Autowired
+    private UsersInfoService usersInfoService;
+
     /**
-     * 保存用户食谱
-     * @param breakfastArray
-     * @param lunchArray
-     * @param dinnerArray
-     * @param uid
+     * 保存或更新用户食谱
+     * @param foodsEntity
+     * @param request
+     *
      */
     @RequestMapping("/saveUserFoods")
-    public R saveUserFoods(@RequestParam("breakfastArray") String breakfastArray,
-                           @RequestParam("lunchArray") String lunchArray,
-                           @RequestParam("dinnerArray") String dinnerArray, Long uid, HttpServletRequest request)
+    public R saveUserFoods(UserFoodsEntity foodsEntity, HttpServletRequest request)
     {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //早餐数组
-        UserFoodsEntity breakfast = new UserFoodsEntity();
-        //午餐数组
-        UserFoodsEntity lunch = new UserFoodsEntity();
-        //晚餐数组
-        UserFoodsEntity dinner = new UserFoodsEntity();
 
-        breakfast.setUid(uid);
-        breakfast.setType("breakfast");
-        breakfast.setFoodsArray(breakfastArray);
+        //获取当前计划
+        List<Users> userList = usersInfoService.queryByUid(foodsEntity.getUid());
+        String myReport = userList.get(0).getCurrentPlan();
 
-        lunch.setUid(uid);
-        lunch.setType("lunch");
-        lunch.setFoodsArray(lunchArray);
-
-        dinner.setUid(uid);
-        dinner.setType("dinner");
-        dinner.setFoodsArray(dinnerArray);
-
-        //获取session
-        int myReport = Integer.valueOf(getSession(request));
-
-        List<UserFoodsEntity> foodsList = userFoodsService.queryFoodsInfo(uid,myReport);
+        List<UserFoodsEntity> foodsList = userFoodsService.queryFoodsInfo(foodsEntity.getUid(),myReport);
         if(foodsList.size() > 0 ) {
             //更新
-            Long breakfastId = null;
-            Long lunchId = null;
-            Long dinnerId = null;
-            for (UserFoodsEntity foods : foodsList) {
-                if(foods.getType().equals("breakfast")) {
-                    breakfastId = foods.getId();
-                } else if(foods.getType().equals("lunch")) {
-                    lunchId = foods.getId();
-                } else if(foods.getType().equals("dinner")) {
-                    dinnerId = foods.getId();
-                }
-            }
+            foodsEntity.setId(foodsList.get(0).getId());
 
-            breakfast.setId(breakfastId);
-            lunch.setId(lunchId);
-            dinner.setId(dinnerId);
-
-            userFoodsService.update(breakfast);
-            userFoodsService.update(lunch);
-            userFoodsService.update(dinner);
+            userFoodsService.update(foodsEntity);
 
         } else {
             //新建
-            breakfast.setCreateTime(sdf.format(new Date()));
-            lunch.setCreateTime(sdf.format(new Date()));
-            dinner.setCreateTime(sdf.format(new Date()));
+            foodsEntity.setCreateTime(sdf.format(new Date()));
 
-            breakfast.setMyReport(myReport);
-            lunch.setMyReport(myReport);
-            dinner.setMyReport(myReport);
+            foodsEntity.setMyReport(myReport);
 
-            userFoodsService.saveConfig(breakfast);
-            userFoodsService.saveConfig(lunch);
-            userFoodsService.saveConfig(dinner);
+            userFoodsService.saveConfig(foodsEntity);
+
         }
 
         return R.ok();
@@ -109,7 +72,7 @@ public class FoodsInfoController_H5 extends BaseController {
     @RequestMapping("/updateUserFoods")
     public R updateUserFoods(@RequestParam("breakfastArray") String breakfastArray,
                            @RequestParam("lunchArray") String lunchArray,
-                           @RequestParam("dinnerArray") String dinnerArray,Long uid,int myReport)
+                           @RequestParam("dinnerArray") String dinnerArray,Long uid,String myReport)
     {
 
         List<UserFoodsEntity> userFoods = userFoodsService.queryFoodsInfo(uid,myReport);
@@ -153,30 +116,17 @@ public class FoodsInfoController_H5 extends BaseController {
     @RequestMapping("/getUserFoods")
     public R getUserFoods(Long uid, HttpServletRequest request) {
 
-        String myReport = getSession(request);
+        //获取当前计划
+        List<Users> userList = usersInfoService.queryByUid(uid);
+        String myReport = userList.get(0).getCurrentPlan();
 
-        List<UserFoodsEntity> userFoods = userFoodsService.queryFoodsInfo(uid,Integer.valueOf(myReport));
-        String breakfastArray = new String();
-        String lunchArray = new String();
-        String dinnerArray = new String();
-        String str = null;
-        for (UserFoodsEntity foods : userFoods) {
-            if(foods.getType().equals("breakfast")) {
-                str = foods.getFoodsArray();
-                breakfastArray = (str);
-            } else if(foods.getType().equals("lunch")) {
-                str = foods.getFoodsArray();
-                lunchArray = (str);
-            } else if(foods.getType().equals("dinner")) {
-                str = foods.getFoodsArray();
-                dinnerArray = (str);
-            }
+        List<UserFoodsEntity> userFoods = userFoodsService.queryFoodsInfo(uid,myReport);
+
+        if(userFoods.size() == 0) {
+            return R.error("无uid=" + uid + ",myReport=" + myReport +"对应的信息");
         }
-        Map map = new HashMap<>();
-        map.put("breakfastArray",breakfastArray);
-        map.put("lunchArray",lunchArray);
-        map.put("dinnerArray",dinnerArray);
-        return R.ok().put("foods",map);
+
+        return R.ok().put("foods",userFoods.get(0));
     }
 
 }

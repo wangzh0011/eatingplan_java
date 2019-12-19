@@ -49,6 +49,16 @@ public class Users {
 
     private String qcCodeUrl;//收款二维码路径
 
+    private String currentPlan;//当前计划
+
+    public String getCurrentPlan() {
+        return currentPlan;
+    }
+
+    public void setCurrentPlan(String currentPlan) {
+        this.currentPlan = currentPlan;
+    }
+
     public String getQcCodeUrl() {
         return qcCodeUrl;
     }

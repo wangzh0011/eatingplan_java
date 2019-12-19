@@ -45,7 +45,23 @@ public class AppPayController_H5 extends BaseController{
     @Autowired
     private AccountService accountService;
 
+    @RequestMapping("/getSystemConfig")
+    public R getSystemConfig(){
+        String agentFee = sysConfigService.getValue("agentFee");
+        String partnerFee = sysConfigService.getValue("partnerFee");
+        String reportFee = sysConfigService.getValue("reportFee");
+        String toolFee = sysConfigService.getValue("toolFee");
 
+        Map map = new HashMap();
+
+        map.put("agentFee",agentFee);
+        map.put("partnerFee",partnerFee);
+        map.put("reportFee",reportFee);
+        map.put("toolFee",toolFee);
+
+        return R.ok().put("systemConfig",map);
+
+    }
 
 
     /**
@@ -58,7 +74,7 @@ public class AppPayController_H5 extends BaseController{
     public R getPayParameter(Long uid, String totalFee, String type, HttpServletRequest request){
 
         //根据type获取系统设置的支付金额  比较前台传入的金额和后台设置的金额
-        Double rmb_double = Double.valueOf(sysConfigService.getValue("RMB_H5")) * 100;
+        Double rmb_double = Double.valueOf(sysConfigService.getValue("reportFee")) * 100;
 
         Integer rmb = rmb_double.intValue();
 
@@ -79,15 +95,15 @@ public class AppPayController_H5 extends BaseController{
         unifiedorder.setSpbill_create_ip(IPUtils.getIpAddr(request));
         unifiedorder.setNotify_url(Constant.notifyUrl);
         unifiedorder.setTrade_type(Constant.tradeType_h5);
-        /**
-         * WAP网站应用
-         * {"h5_info": //h5支付固定传"h5_info"
-         *    {"type": "",  //场景类型
-         *     "wap_url": "",//WAP网站URL地址
-         *     "wap_name": ""  //WAP 网站名
-         *     }
-         * }
-         */
+
+//          WAP网站应用
+//         {"h5_info": //h5支付固定传"h5_info"
+//             {"type": "",  //场景类型
+//              "wap_url": "",//WAP网站URL地址
+//              "wap_name": ""  //WAP 网站名
+//              }
+//          }
+
         unifiedorder.setScene_info("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"" + Constant.notifyUrl +"\",\"wap_name\": \"脂肪杀手支付\"}}");
         //获取统一下单参数xml
         String unifiedorderXml = getUnifiedorder(unifiedorder);
@@ -95,6 +111,7 @@ public class AppPayController_H5 extends BaseController{
         String payUrl = Constant.unifiedorderUrl;
         //请求统一下单接口
         String prepayId = null;
+        /**
         try {
 
             String xmlStr = HttpUtil.doPostToStr(payUrl,unifiedorderXml);
@@ -105,7 +122,7 @@ public class AppPayController_H5 extends BaseController{
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }**/
 
         //获取H5调取支付接口所需参数
         PayParameter pay = new PayParameter();

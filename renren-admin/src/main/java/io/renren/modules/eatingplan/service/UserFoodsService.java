@@ -9,7 +9,7 @@ public interface UserFoodsService extends IService<UserFoodsEntity> {
 
     List queryFoodsInfo(Long uid);
 
-    List queryFoodsInfo(Long uid,int myReport);
+    List queryFoodsInfo(Long uid,String myReport);
 
     /**
      * 保存配置信息

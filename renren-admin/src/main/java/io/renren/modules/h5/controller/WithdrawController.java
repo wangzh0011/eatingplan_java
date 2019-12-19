@@ -49,7 +49,6 @@ public class WithdrawController extends BaseController {
      * @return
      * @throws Exception
      */
-    @ResponseBody
     @RequestMapping(value = "/withdraw")
     public R imageUploadOfVessel(
             @RequestParam("image") MultipartFile image, Long uid, Double money) {

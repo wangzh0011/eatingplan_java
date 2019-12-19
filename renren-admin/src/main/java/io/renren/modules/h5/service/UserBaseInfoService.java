@@ -14,6 +14,8 @@ public interface UserBaseInfoService extends IService<UserBaseInfo> {
 
     List<UserBaseInfo> queryByUid(Long uid);
 
+    List<UserBaseInfo> queryByUid(Long uid,String myReport);
+
     /**
      * 保存配置信息
      */

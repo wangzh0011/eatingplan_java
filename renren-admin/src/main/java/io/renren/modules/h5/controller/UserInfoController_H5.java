@@ -30,11 +30,9 @@ public class UserInfoController_H5 extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public R login(@RequestBody Users user, HttpServletRequest request){
 
-        //设置session信息
-        String myReport = getSession(request);
 
         Map map = new HashMap<>();
         log.info("传入的userName为：" + user.getUserName() + ",shareUid为：" + user.getShareUid());
@@ -51,7 +49,12 @@ public class UserInfoController_H5 extends BaseController{
             isNewUser = "N";
 
             //获取我的计划
-            plan = eatingPlanService.queryByUid(users.get(0).getId(),myReport).get(0);
+            List<EatingPlan> list = eatingPlanService.queryByUid(users.get(0).getId(),user.getCurrentPlan());
+            if(list.size() == 0) {
+                plan = eatingPlanService.queryByUid(users.get(0).getId(),"1").get(0);
+            } else {
+                plan = list.get(0);
+            }
 
         }else {
             user.setCreateTime(sdf.format(new Date()));
@@ -60,11 +63,13 @@ public class UserInfoController_H5 extends BaseController{
                 user.setShareUid(user.getShareUid());
             }
 
+            user.setCurrentPlan(Constant.DEFAULT_REPORT);
+
             //注册
             user = registerUser(user);
 
             //保存我的计划
-            plan = new EatingPlan(user.getId(),myReport,sdf.format(new Date()),String.valueOf(System.currentTimeMillis()));
+            plan = new EatingPlan(user.getId(),Constant.DEFAULT_REPORT,sdf.format(new Date()),String.valueOf(System.currentTimeMillis()));
             eatingPlanService.save(plan);
 
             isNewUser = "Y";
@@ -102,7 +107,7 @@ public class UserInfoController_H5 extends BaseController{
             return R.error("此用户不存在");
         }
 
-        if(usersInfoService.update(user)) return R.ok();
+        if(usersInfoService.update(user)) return R.ok().put("userInfo",list.get(0));
 
         return R.error();
     }

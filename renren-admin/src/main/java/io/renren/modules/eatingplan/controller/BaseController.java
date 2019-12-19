@@ -18,6 +18,8 @@ public class BaseController {
     public String getSession(HttpServletRequest request) {
         //设置session信息
         String myReport = (String)request.getSession().getAttribute("myReport");
+
+        log.info("baseController获取session为:" + myReport);
         if(myReport == null) {
             request.getSession().setAttribute("myReport", Constant.DEFAULT_REPORT);
             myReport = Constant.DEFAULT_REPORT;

@@ -4,6 +4,8 @@ import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
 import io.renren.modules.eatingplan.controller.BaseController;
 import io.renren.modules.eatingplan.entity.UserBaseInfo;
+import io.renren.modules.eatingplan.entity.Users;
+import io.renren.modules.eatingplan.service.UsersInfoService;
 import io.renren.modules.h5.service.UserBaseInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,9 @@ public class UserBaseInfoController extends BaseController {
     @Autowired
     private UserBaseInfoService userBaseInfoService;
 
+    @Autowired
+    private UsersInfoService usersInfoService;
+
     /**
      * 保存用户基础信息
      * @param userBase
@@ -30,8 +35,9 @@ public class UserBaseInfoController extends BaseController {
             return R.error("未获取到用户信息");
         }
 
-        //设置session
-        String myReport = getSession(request);
+        //获取当前计划
+        List<Users> userList = usersInfoService.queryByUid(userBase.getUid());
+        String myReport = userList.get(0).getCurrentPlan();
 
         List list = userBaseInfoService.queryByUid(userBase.getUid());
         if(list.size() > 0) {
@@ -52,13 +58,18 @@ public class UserBaseInfoController extends BaseController {
      */
     @RequestMapping("/getUserBaseInfo")
     public R getUserBaseInfo(Long uid) {
-        List<UserBaseInfo> list = userBaseInfoService.queryByUid(uid);
+
+        //获取当前计划
+        List<Users> userList = usersInfoService.queryByUid(uid);
+        String myReport = userList.get(0).getCurrentPlan();
+
+        List<UserBaseInfo> list = userBaseInfoService.queryByUid(uid,myReport);
         if(list.size() > 0) {
             UserBaseInfo userBase = list.get(0);
             return R.ok().put("userBase",userBase);
         }
 
-        return R.error("无uid=" + uid + "对应的信息");
+        return R.error("无uid=" + uid + ",myReport=" + myReport +"对应的信息");
     }
 
 }
