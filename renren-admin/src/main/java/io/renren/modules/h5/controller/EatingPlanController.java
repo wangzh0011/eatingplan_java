@@ -104,4 +104,25 @@ public class EatingPlanController {
 
     }
 
+    @RequestMapping("/updateEatingPlan")
+    public R updateEatingPlan(EatingPlan eatingPlan) {
+
+        List<EatingPlan> eatingPlansList = eatingPlanService.queryByUid(eatingPlan.getUid());
+
+        if(eatingPlansList.size() == 0) {
+            return R.error("无法查询此计划 【id=" + eatingPlan.getId() + " &uid=" + eatingPlan.getUid() +"】");
+        }
+        eatingPlanService.update(eatingPlan);
+
+
+        List<Users> userList = usersInfoService.queryByUid(eatingPlan.getUid());
+
+        if(userList.size() == 0) {
+            return R.error("此用户不存在");
+        }
+
+        return R.ok().put("userInfo",userList.get(0));
+
+    }
+
 }

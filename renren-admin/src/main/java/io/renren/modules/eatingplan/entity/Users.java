@@ -37,7 +37,7 @@ public class Users {
 
     private String country;
 
-    private String status = "0";// 0：未完成指引  1：已完成指引
+    private String status = "0";// 备用
 
     private String isPay = "N"; // Y:已支付  N：未支付
 

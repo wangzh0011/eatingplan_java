@@ -123,7 +123,7 @@ public class FoodsInfoController_H5 extends BaseController {
         List<UserFoodsEntity> userFoods = userFoodsService.queryFoodsInfo(uid,myReport);
 
         if(userFoods.size() == 0) {
-            return R.error("无uid=" + uid + ",myReport=" + myReport +"对应的信息");
+            return R.error("【getUserFoods】无uid=" + uid + ",myReport=" + myReport +"对应的信息");
         }
 
         return R.ok().put("foods",userFoods.get(0));

@@ -39,7 +39,7 @@ public class UserFoodsServiceImpl extends ServiceImpl<UserFoodsDao, UserFoodsEnt
 
 	@Override
 	public void saveConfig(UserFoodsEntity config) {
-		this.save(config);
+		baseMapper.insert(config);
 	}
 
 	@Override

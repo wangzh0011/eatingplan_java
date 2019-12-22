@@ -15,11 +15,21 @@ public class EatingPlan {
 
     private String timeStamp;
 
+    private String status = "0";// 0：未完成指引  1：已完成指引;
+
     public EatingPlan(Long uid, String myReport, String createTime, String timeStamp) {
         this.uid = uid;
         this.myReport = myReport;
         this.createTime = createTime;
         this.timeStamp = timeStamp;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getTimeStamp() {
