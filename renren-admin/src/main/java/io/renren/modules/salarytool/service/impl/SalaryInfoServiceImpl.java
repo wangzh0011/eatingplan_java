@@ -26,7 +26,7 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 	@Override
 	public List<SalaryInfo> query(String openid) {
 
-		List<SalaryInfo> salaryInfo = baseMapper.selectList(new QueryWrapper<SalaryInfo>().eq("temp",openid));
+		List<SalaryInfo> salaryInfo = baseMapper.selectList(new QueryWrapper<SalaryInfo>().eq("openid",openid));
 
 		return salaryInfo;
 	}

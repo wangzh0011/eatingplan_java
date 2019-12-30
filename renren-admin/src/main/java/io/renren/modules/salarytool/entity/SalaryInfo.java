@@ -13,7 +13,7 @@ public class SalaryInfo {
 
     private String createTime;
 
-    private String temp;
+    private String openid;
 
     private String updateTime;
 
@@ -28,6 +28,16 @@ public class SalaryInfo {
     private String country;
 
     private String education;
+
+    private String lastLoginTime;
+
+    public String getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(String lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
 
     public String getEducation() {
         return education;
@@ -85,12 +95,12 @@ public class SalaryInfo {
         this.updateTime = updateTime;
     }
 
-    public String getTemp() {
-        return temp;
+    public String getOpenid() {
+        return openid;
     }
 
-    public void setTemp(String temp) {
-        this.temp = temp;
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public String getCreateTime() {
