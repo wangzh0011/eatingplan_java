@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.modules.salarytool.dao.SalaryInfoDao;
 import io.renren.modules.salarytool.entity.SalaryInfo;
 import io.renren.modules.salarytool.service.SalaryInfoService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +26,9 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 	@Override
 	public List<SalaryInfo> query(String openid) {
 
-		List<SalaryInfo> user = baseMapper.selectList(new QueryWrapper<SalaryInfo>().eq("temp",openid));
+		List<SalaryInfo> salaryInfo = baseMapper.selectList(new QueryWrapper<SalaryInfo>().eq("temp",openid));
 
-		return user;
+		return salaryInfo;
 	}
 
 	@Override
@@ -36,6 +37,21 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 		List<SalaryInfo> salaryInfo = baseMapper.selectList(new QueryWrapper<SalaryInfo>().eq("sid",uid));
 
 		return salaryInfo;
+	}
+
+	@Override
+	public List<SalaryInfo> queryByCondition(SalaryInfo salaryInfo) {
+
+		List<SalaryInfo> salaryInfoList = baseMapper.selectList(new QueryWrapper<SalaryInfo>()
+				.eq(StringUtils.isNotBlank(salaryInfo.getCountry()),"country",salaryInfo.getCountry())
+				.eq(StringUtils.isNotBlank(salaryInfo.getProvince()),"province",salaryInfo.getProvince())
+				.eq(StringUtils.isNotBlank(salaryInfo.getCity()),"city",salaryInfo.getCity())
+				.eq(StringUtils.isNotBlank(salaryInfo.getAge()),"age",salaryInfo.getAge())
+				.eq(StringUtils.isNotBlank(salaryInfo.getGender()),"gender",salaryInfo.getGender())
+				.eq(StringUtils.isNotBlank(salaryInfo.getEducation()),"education",salaryInfo.getEducation())
+				.orderByAsc("salary")
+		);
+		return salaryInfoList;
 	}
 
 

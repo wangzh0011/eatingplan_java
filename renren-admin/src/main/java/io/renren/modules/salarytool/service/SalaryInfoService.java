@@ -12,6 +12,8 @@ public interface SalaryInfoService extends IService<SalaryInfo> {
 
     List<SalaryInfo> queryByUid(Long uid);
 
+    List<SalaryInfo> queryByCondition(SalaryInfo salaryInfo);
+
     /**
      * 保存配置信息
      */

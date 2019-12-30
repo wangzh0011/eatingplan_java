@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -45,5 +46,27 @@ public class SalaryInfoController {
         }
         return R.error();
     }
+
+
+    @RequestMapping("/getSalaryInfo")
+    public R getSalaryInfo(SalaryInfo salaryInfo) {
+        List<SalaryInfo> salaryInfoList = salaryInfoService.queryByCondition(salaryInfo);
+        List<SalaryInfo> salary = salaryInfoService.query(salaryInfo.getTemp());
+        int ranking = 0;
+        for (int i = 0; i < salaryInfoList.size(); i++) {
+            if(Integer.valueOf(salary.get(0).getSalary()) <= Integer.valueOf(salaryInfoList.get(i).getSalary())) {
+                ranking = i;
+                break;
+            }
+        }
+
+        //数字格式化
+        double percentTemp = (double) ranking / salaryInfoList.size();
+        DecimalFormat df = new DecimalFormat("0%");
+        String percent = df.format(percentTemp);
+
+        return R.ok().put("percent",percent).put("salaryInfoList",salaryInfoList);
+    }
+
 
 }
