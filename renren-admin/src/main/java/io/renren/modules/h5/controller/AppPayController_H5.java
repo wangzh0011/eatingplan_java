@@ -208,13 +208,13 @@ public class AppPayController_H5 extends BaseController{
 
         SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();
 
-        parameters.put("appId", Constant.AppId_JK);
+        parameters.put("appId", Constant.AppId_H5);
         parameters.put("timeStamp", pay.getTimeStamp());
         parameters.put("nonceStr", pay.getNonceStr());
         parameters.put("package", pay.getPackage_pay());
         parameters.put("signType", pay.getSingTpye());
         //数据签名
-        String paySign = createPaySign(parameters,Constant.key);
+        String paySign = SignatureUtil.createPaySign(parameters,Constant.key);
         pay.setPaySign(paySign);
 
         return pay;
@@ -408,7 +408,7 @@ public class AppPayController_H5 extends BaseController{
             element.appendChild(scene_info);
 
             Element sign = document.createElement("sign");
-            sign.setTextContent(createPaySign(parameters,Constant.key));//签名
+            sign.setTextContent(SignatureUtil.createPaySign(parameters,Constant.key));//签名
             element.appendChild(sign);
             /**xml子元素**/
 
@@ -431,44 +431,6 @@ public class AppPayController_H5 extends BaseController{
         }
 
         return xml;
-    }
-
-
-    /**
-     * 签名算法
-     *
-     * 第一步：对参数按照key=value的格式，并按照参数名ASCII字典序排序如下：
-     *
-     * stringA="appid=wxd930ea5d5a258f4f&body=test&device_info=1000&mch_id=10000100&nonce_str=ibuaiVcKdpRxkhJA";
-     *
-     * 第二步：拼接API密钥：
-     *
-     * stringSignTemp=stringA+"&key=192006250b4c09247ec02edce69f6a2d" //注：key为商户平台设置的密钥key
-     *
-     * sign=MD5(stringSignTemp).toUpperCase()="9A0A8659F005D6984697E2CA0A9CF3B7" //注：MD5签名方式
-     *
-     * sign=hash_hmac("sha256",stringSignTemp,key).toUpperCase()="6A9AE1657590FD6257D693A078E1C3E4BB6BA4DC30B23E0EE2496E54170DACD6" //注：HMAC-SHA256签名方式
-     * @param parameters
-     * @param key
-     * @return
-     */
-    public String createPaySign(SortedMap parameters, String key){
-        StringBuffer signTemp = new StringBuffer();
-        Set es = parameters.entrySet();  //所有参与传参的参数按照accsii排序（升序）
-        Iterator it = es.iterator();
-        while(it.hasNext()) {
-            Map.Entry entry = (Map.Entry)it.next();
-            String k = (String)entry.getKey();
-            Object v = entry.getValue();
-            //空值不传递，不参与签名组串
-            if(null != v && !"".equals(v)) {
-                signTemp.append(k + "=" + v + "&");
-            }
-        }
-        signTemp = signTemp.append("key="+key);
-        //MD5加密,结果转换为大写字符
-        String sign = MD5Util.md5_32Length(signTemp.toString()).toUpperCase();
-        return sign;
     }
 
     public static void main(String[] args){

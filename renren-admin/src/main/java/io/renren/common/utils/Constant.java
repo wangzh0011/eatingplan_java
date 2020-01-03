@@ -139,11 +139,18 @@ public class Constant {
     public static String tradeType = "JSAPI";
     /**end**/
 
+
+
     /**H5相关信息**/
+
     //appid
-    public static String AppId_H5 ="";
+    public static String AppId_H5 ="wx49f8e7732fd34fbf";
+    //appsecret
+    public static String AppSecret_H5 = "ffba3e03caaf816f078350cda8de5e3d";
     //交易类型 h5
     public static String tradeType_h5 = "MWEB";
+
+    /**end**/
 
 
     //请求微信接口的方式
@@ -154,6 +161,8 @@ public class Constant {
     public final static String TokenUrl_JK = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId_JK+"&secret="+AppSecret_JK;
     public final static String OpenIdUrl_FQ = "https://api.weixin.qq.com/sns/jscode2session?appid="+AppId_FQ+"&secret="+AppSecret_FQ+"&js_code=JSCODE&grant_type=authorization_code";
     public final static String TokenUrl_FQ = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId_FQ+"&secret="+AppSecret_FQ;
+    public final static String TokenUrl_H5 = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AppId_H5+"&secret="+AppSecret_H5;
+    public final static String Jsapi_ticketUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
     public final static String templateUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=ACCESS_TOKEN";
     public final static String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单url
     //获取小程序码url
