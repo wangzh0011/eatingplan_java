@@ -20,5 +20,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SalaryInfoDao extends BaseMapper<SalaryInfo> {
 
+    String queryAvg();
+
+    String queryMoreAvg();
+
+    String queryRanking(String openid);
 
 }

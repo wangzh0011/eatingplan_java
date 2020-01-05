@@ -7,7 +7,7 @@ public class SalaryInfo {
 
     private Long id;
 
-    private String salary;//薪资
+    private String salary = "0";//薪资
 
     private String age;
 

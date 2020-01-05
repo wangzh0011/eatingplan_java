@@ -21,4 +21,10 @@ public interface SalaryInfoService extends IService<SalaryInfo> {
 
     void update(SalaryInfo salaryInfo);
 
+    String queryAvg();
+
+    String queryMoreAvg();
+
+    String queryRanking(String openid);
+
 }

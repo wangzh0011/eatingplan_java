@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
+<mapper namespace="io.renren.modules.salarytool.dao.SalaryInfoDao">
+
+
+	<select id="queryAvg" resultType="string">
+		select avg(salary) from salary_info
+	</select>
+
+	<select id="queryMoreAvg" resultType="string">
+		select count(*) from salary_info where salary >= (select avg(salary) from salary_info)
+	</select>
+
+	<select id="queryRanking" parameterType="string" resultType="string">
+		select format(a.i,0) from (select  (@i:=@i+1)  i,openid,salary from  salary_info ,(select   @i:=0)   as  it ORDER BY salary+0 asc) a where a.openid = #{openid}
+	</select>
+	
+</mapper>

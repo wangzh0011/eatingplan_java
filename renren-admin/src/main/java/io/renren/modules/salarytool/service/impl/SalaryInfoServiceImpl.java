@@ -49,7 +49,7 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 				.eq(StringUtils.isNotBlank(salaryInfo.getAge()),"age",salaryInfo.getAge())
 				.eq(StringUtils.isNotBlank(salaryInfo.getGender()),"gender",salaryInfo.getGender())
 				.eq(StringUtils.isNotBlank(salaryInfo.getEducation()),"education",salaryInfo.getEducation())
-				.orderByAsc("salary")
+				.orderByAsc("salary+0")
 		);
 		return salaryInfoList;
 	}
@@ -64,6 +64,21 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 	@Override
 	public void update(SalaryInfo salaryInfo) {
 		baseMapper.updateById(salaryInfo);
+	}
+
+	@Override
+	public String queryAvg() {
+		return baseMapper.queryAvg();
+	}
+
+	@Override
+	public String queryMoreAvg() {
+		return baseMapper.queryMoreAvg();
+	}
+
+	@Override
+	public String queryRanking(String openid) {
+		return baseMapper.queryRanking(openid);
 	}
 
 

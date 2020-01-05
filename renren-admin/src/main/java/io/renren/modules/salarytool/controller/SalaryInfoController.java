@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -71,22 +72,58 @@ public class SalaryInfoController {
 
     @RequestMapping("/getSalaryInfoByCondition")
     public R getSalaryInfo(SalaryInfo salaryInfo) {
+
+        List<SalaryInfo> list = salaryInfoService.query(salaryInfo.getOpenid());
+
+        //更新
+        if(list.size() > 0) {
+            SalaryInfo salaryInfo_db = list.get(0);
+            salaryInfo.setId(salaryInfo_db.getId());
+            salaryInfo.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            salaryInfoService.update(salaryInfo);
+        }
+
         List<SalaryInfo> salaryInfoList = salaryInfoService.queryByCondition(salaryInfo);
-        List<SalaryInfo> salary = salaryInfoService.query(salaryInfo.getOpenid());
-        int ranking = 0;
+        int ranking = Integer.valueOf(salaryInfoService.queryRanking(salaryInfo.getOpenid()));//排名
+        String avgNum = salaryInfoService.queryMoreAvg();
+        int num = salaryInfoList.size() / 20;//将数据分成20分  每份需要的数据个数
+        List finalSalaryInfoList = new ArrayList<>();
+
         for (int i = 0; i < salaryInfoList.size(); i++) {
-            if(Integer.valueOf(salary.get(0).getSalary()) <= Integer.valueOf(salaryInfoList.get(i).getSalary())) {
-                ranking = i;
-                break;
+            if(num != 0) {
+                if(i % num == 0) {
+                    finalSalaryInfoList.add(salaryInfoList.get(i).getSalary());
+                }
+            } else {
+                finalSalaryInfoList.add(salaryInfoList.get(i).getSalary());
+            }
+
+        }
+
+        if(finalSalaryInfoList.size() > 20) {
+            int removenum = finalSalaryInfoList.size() - 20;//需要移除的个数
+            for (int i = 1; i < removenum; i++) {
+                if(i == 1) {
+                    finalSalaryInfoList.remove(i);
+                } else {
+                    finalSalaryInfoList.remove(i+2);
+                }
             }
         }
+
+
 
         //数字格式化
         double percentTemp = (double) ranking / salaryInfoList.size();
         DecimalFormat df = new DecimalFormat("0%");
         String percent = df.format(percentTemp);
 
-        return R.ok().put("percent",percent).put("salaryInfoList",salaryInfoList);
+        return R.ok()
+                .put("rankingPercent",percent)
+                .put("salaryInfoList",finalSalaryInfoList)
+                .put("morethan",ranking-1)
+                .put("lessthan",salaryInfoList.size()-ranking)
+                .put("avgNum",avgNum);
     }
 
     @RequestMapping("/getMySalaryInfo")
@@ -95,6 +132,15 @@ public class SalaryInfoController {
         List<SalaryInfo> list = salaryInfoService.query(salaryInfo.getOpenid());
         if(list.size() == 0) return R.error("查无此信息");
         return R.ok().put("salaryInfo",list.get(0));
+
+    }
+
+
+    public static void main(String[] arg) {
+
+        int a = 50 /20;
+
+        System.out.println(a);
 
     }
 
