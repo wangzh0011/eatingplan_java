@@ -8,9 +8,17 @@
 
 package io.renren.modules.job.task;
 
+import com.alibaba.fastjson.JSON;
+import io.renren.common.utils.Constant;
+import io.renren.common.utils.RequestWeixinApi;
+import io.renren.modules.sys.entity.SysConfigEntity;
+import io.renren.modules.sys.service.SysConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * 测试定时任务(演示Demo，可删除)
@@ -23,8 +31,25 @@ import org.springframework.stereotype.Component;
 public class TestTask implements ITask {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Autowired
+	private SysConfigService sysConfigService;
+
 	@Override
 	public void run(String params){
-		logger.debug("TestTask定时任务正在执行，参数为：{}", params);
+		String result = (String) RequestWeixinApi.requestApi(Constant.TokenUrl_H5,"GET",null);
+		Map map = (Map) JSON.parse(result);
+		String access_token = (String) map.get("access_token");
+
+		String access_token_db = sysConfigService.getValue("access_token");
+
+		if(access_token_db == null) {
+			SysConfigEntity config = new SysConfigEntity();
+			config.setParamKey("access_token");
+			config.setParamValue(access_token);
+			sysConfigService.saveConfig(config);
+		} else {
+			sysConfigService.updateValueByKey("access_token",access_token);
+		}
+
 	}
 }

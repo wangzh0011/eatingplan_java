@@ -15,7 +15,11 @@ public class SalaryInfo {
 
     private String openid;
 
+    private String unionid;
+
     private String updateTime;
+
+    private String nickName;
 
     private String avatarUrl;
 
@@ -30,6 +34,22 @@ public class SalaryInfo {
     private String education;
 
     private String lastLoginTime;
+
+    public String getUnionid() {
+        return unionid;
+    }
+
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public String getLastLoginTime() {
         return lastLoginTime;

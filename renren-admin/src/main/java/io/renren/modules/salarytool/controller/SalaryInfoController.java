@@ -1,6 +1,9 @@
 package io.renren.modules.salarytool.controller;
 
+import com.alibaba.fastjson.JSON;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
+import io.renren.common.utils.RequestWeixinApi;
 import io.renren.modules.salarytool.entity.SalaryInfo;
 import io.renren.modules.salarytool.service.SalaryInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/salaryTool")
@@ -22,8 +26,20 @@ public class SalaryInfoController {
 
     @RequestMapping("/login")
     public R login(String code) {
-        //需修改
-        List<SalaryInfo> list = salaryInfoService.query(code);
+
+        //获取access_token和openid
+        String accessTokenUrl = Constant.ACCESS_TOKEN_AUTH.replace("CODE",code);
+        String result = (String) RequestWeixinApi.requestApi(accessTokenUrl,"GET",null);
+        Map map = (Map)JSON.parse(result);
+        String access_token = (String) map.get("access_token");
+        String openid = (String) map.get("openid");
+        //获取用户基本信息
+        String userinfoUrl = Constant.GET_USERINFO.replace("ACCESS_TOKEN",access_token).replace("OPENID",openid);
+        String result1 = (String) RequestWeixinApi.requestApi(userinfoUrl,"GET",null);
+        Map userInfoMap = (Map) JSON.parse(result1);
+
+        //需修改      ==> modify 2020.1.6
+        List<SalaryInfo> list = salaryInfoService.query(openid);
         //更新
         if(list.size() > 0) {
             list.get(0).setLastLoginTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
@@ -34,9 +50,17 @@ public class SalaryInfoController {
         //新建
         SalaryInfo salaryInfo = new SalaryInfo();
         salaryInfo.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        salaryInfo.setOpenid((String)userInfoMap.get("openid"));
+        salaryInfo.setNickName((String)userInfoMap.get("nickname"));
+        salaryInfo.setGender((String)userInfoMap.get("sex"));
+        salaryInfo.setProvince((String)userInfoMap.get("province"));
+        salaryInfo.setCity((String)userInfoMap.get("city"));
+        salaryInfo.setCountry("china");
+        salaryInfo.setAvatarUrl((String)userInfoMap.get("headimgurl"));
+        salaryInfo.setUnionid((String)userInfoMap.get("unionid"));
 
-        //需修改
-        salaryInfo.setOpenid(code);
+        //需修改   ==> modify 2020.1.6
+        salaryInfo.setOpenid(openid);
         if(salaryInfoService.save(salaryInfo)) {
             List<SalaryInfo> list1 = salaryInfoService.query(salaryInfo.getOpenid());
             return R.ok().put("salaryInfo",list1.get(0));
@@ -56,9 +80,9 @@ public class SalaryInfoController {
         //更新
         if(list.size() > 0) {
             SalaryInfo salaryInfo_db = list.get(0);
-            if(salaryInfo_db.getUpdateTime() != null && salaryInfo_db.getUpdateTime().contains(sdf.format(new Date()))){
-                return R.error("亲，每日只能设置一次哦^_^");
-            }
+//            if(salaryInfo_db.getUpdateTime() != null && salaryInfo_db.getUpdateTime().contains(sdf.format(new Date()))){
+//                return R.error("亲，每日只能设置一次哦^_^");
+//            }
             salaryInfo.setId(salaryInfo_db.getId());
             salaryInfo.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             salaryInfoService.update(salaryInfo);
@@ -80,6 +104,7 @@ public class SalaryInfoController {
             SalaryInfo salaryInfo_db = list.get(0);
             salaryInfo.setId(salaryInfo_db.getId());
             salaryInfo.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            salaryInfo.setSalary(salaryInfo_db.getSalary());
             salaryInfoService.update(salaryInfo);
         }
 

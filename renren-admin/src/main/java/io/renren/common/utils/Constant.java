@@ -190,4 +190,11 @@ public class Constant {
     //默认第几份报告
     public final static String DEFAULT_REPORT = "1";
 
+    //网页授权url
+    public final static String  SNSAPI_USERINFO = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + AppId_H5 + "&redirect_uri=https%3a%2f%2fwww.fangqie.top&response_type=code&scope=snsapi_userinfo&state=abc#wechat_redirect";
+    //网页授权之后获取授权access_token
+    public final static String ACCESS_TOKEN_AUTH = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + AppId_H5 + "&secret=" + AppSecret_H5 + "&code=CODE&grant_type=authorization_code";
+    //获取用户基本信息
+    public final static String GET_USERINFO = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+
 }
