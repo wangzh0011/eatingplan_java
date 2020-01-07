@@ -21,14 +21,13 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * 测试定时任务(演示Demo，可删除)
  *
- * testTask为spring bean的名称
+ * jsapiTicketTask为spring bean的名称
  *
- * @author Mark sunlightcs@gmail.com
+ * @author
  */
-@Component("testTask")
-public class TestTask implements ITask {
+@Component("jsapiTicketTask")
+public class JsapiTicketTask implements ITask {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -36,20 +35,24 @@ public class TestTask implements ITask {
 
 	@Override
 	public void run(String params){
-		String result = (String) RequestWeixinApi.requestApi(Constant.TokenUrl_H5,"GET",null);
+
+		String access_token = sysConfigService.getValue("access_token");
+		String result = (String) RequestWeixinApi.requestApi(Constant.Jsapi_ticketUrl.replace("ACCESS_TOKEN",access_token),"GET",null);
 		Map map = (Map) JSON.parse(result);
-		String access_token = (String) map.get("access_token");
+		String ticket = (String) map.get("ticket");
 
-		String access_token_db = sysConfigService.getValue("access_token");
+		String ticket_db = sysConfigService.getValue("ticket");
 
-		if(access_token_db == null) {
+		if(ticket_db == null) {
 			SysConfigEntity config = new SysConfigEntity();
-			config.setParamKey("access_token");
-			config.setParamValue(access_token);
+			config.setParamKey("ticket");
+			config.setParamValue(ticket);
 			sysConfigService.saveConfig(config);
 		} else {
-			sysConfigService.updateValueByKey("access_token",access_token);
+			sysConfigService.updateValueByKey("ticket",ticket);
 		}
+
+		logger.info("ticket:" + ticket);
 
 	}
 }

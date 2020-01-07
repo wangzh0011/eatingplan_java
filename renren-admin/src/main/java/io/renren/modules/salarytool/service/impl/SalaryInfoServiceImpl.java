@@ -77,8 +77,8 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 	}
 
 	@Override
-	public String queryRanking(String openid) {
-		return baseMapper.queryRanking(openid);
+	public String queryRanking(SalaryInfo salaryInfo) {
+		return baseMapper.queryRanking(salaryInfo);
 	}
 
 

@@ -24,6 +24,6 @@ public interface SalaryInfoDao extends BaseMapper<SalaryInfo> {
 
     String queryMoreAvg();
 
-    String queryRanking(String openid);
+    String queryRanking(SalaryInfo salaryInfo);
 
 }

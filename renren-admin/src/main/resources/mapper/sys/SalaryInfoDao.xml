@@ -11,8 +11,28 @@
 		select count(*) from salary_info where salary >= (select avg(salary) from salary_info)
 	</select>
 
-	<select id="queryRanking" parameterType="string" resultType="string">
-		select format(a.i,0) from (select  (@i:=@i+1)  i,openid,salary from  salary_info ,(select   @i:=0)   as  it ORDER BY salary+0 asc) a where a.openid = #{openid}
+	<select id="queryRanking" parameterType="io.renren.modules.salarytool.entity.SalaryInfo" resultType="string">
+		select format(a.i,0) from (select  (@i:=@i+1)  i,openid,salary from  salary_info ,(select   @i:=0)   as  it where 1 = 1
+		 <if test="country != null and country != ''">
+			 and country = #{country}
+		 </if>
+		<if test="province != null and province != ''">
+			and province = #{province}
+		</if>
+		<if test="city != null and city != ''">
+			and city = #{city}
+		</if>
+		<if test="age != null and age != ''">
+			and age = #{age}
+		</if>
+		<if test="gender != null and gender != ''">
+			and gender = #{gender}
+		</if>
+		<if test="education != null and education != ''">
+			and education = #{education}
+		</if>
+
+		 ORDER BY salary+0 asc) a where a.openid = #{openid}
 	</select>
 	
 </mapper>

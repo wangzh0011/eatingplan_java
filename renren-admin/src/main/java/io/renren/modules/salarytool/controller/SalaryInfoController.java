@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class SalaryInfoController {
     private SalaryInfoService salaryInfoService;
 
     @RequestMapping("/login")
-    public R login(String code) {
+    public R login(String code) throws UnsupportedEncodingException {
 
         //获取access_token和openid
         String accessTokenUrl = Constant.ACCESS_TOKEN_AUTH.replace("CODE",code);
@@ -43,21 +44,29 @@ public class SalaryInfoController {
         //更新
         if(list.size() > 0) {
             list.get(0).setLastLoginTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            list.get(0).setOpenid((String)userInfoMap.get("openid"));
+            list.get(0).setNickName(new String(String.valueOf(userInfoMap.get("nickname")).getBytes("ISO-8859-1"),"utf-8"));
+            list.get(0).setGender(String.valueOf(userInfoMap.get("sex")));
+//            list.get(0).setProvince((String)userInfoMap.get("province"));
+//            list.get(0).setCity((String)userInfoMap.get("city"));
+            list.get(0).setCountry("china");
+            list.get(0).setAvatarUrl((String)userInfoMap.get("headimgurl"));
+            list.get(0).setUnionid((String)userInfoMap.get("unionid"));
             salaryInfoService.update(list.get(0));
             return R.ok().put("salaryInfo",list.get(0));
         }
 
         //新建
         SalaryInfo salaryInfo = new SalaryInfo();
-        salaryInfo.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         salaryInfo.setOpenid((String)userInfoMap.get("openid"));
-        salaryInfo.setNickName((String)userInfoMap.get("nickname"));
-        salaryInfo.setGender((String)userInfoMap.get("sex"));
-        salaryInfo.setProvince((String)userInfoMap.get("province"));
-        salaryInfo.setCity((String)userInfoMap.get("city"));
+        salaryInfo.setNickName(new String(String.valueOf(userInfoMap.get("nickname")).getBytes("ISO-8859-1"),"utf-8"));
+        salaryInfo.setGender(String.valueOf(userInfoMap.get("sex")));
+//        salaryInfo.setProvince((String)userInfoMap.get("province"));
+//        salaryInfo.setCity((String)userInfoMap.get("city"));
         salaryInfo.setCountry("china");
         salaryInfo.setAvatarUrl((String)userInfoMap.get("headimgurl"));
         salaryInfo.setUnionid((String)userInfoMap.get("unionid"));
+        salaryInfo.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
         //需修改   ==> modify 2020.1.6
         salaryInfo.setOpenid(openid);
@@ -109,7 +118,7 @@ public class SalaryInfoController {
         }
 
         List<SalaryInfo> salaryInfoList = salaryInfoService.queryByCondition(salaryInfo);
-        int ranking = Integer.valueOf(salaryInfoService.queryRanking(salaryInfo.getOpenid()));//排名
+        int ranking = Integer.valueOf(salaryInfoService.queryRanking(salaryInfo));//排名
         String avgNum = salaryInfoService.queryMoreAvg();
         int num = salaryInfoList.size() / 20;//将数据分成20分  每份需要的数据个数
         List finalSalaryInfoList = new ArrayList<>();
