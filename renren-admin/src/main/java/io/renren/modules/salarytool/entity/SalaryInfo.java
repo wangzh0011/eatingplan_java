@@ -1,5 +1,6 @@
 package io.renren.modules.salarytool.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("salary_info")
@@ -34,6 +35,17 @@ public class SalaryInfo {
     private String education;
 
     private String lastLoginTime;
+
+    @TableField(exist = false)//不映射数据库
+    private String ageInterval;
+
+    public String getAgeInterval() {
+        return ageInterval;
+    }
+
+    public void setAgeInterval(String ageInterval) {
+        this.ageInterval = ageInterval;
+    }
 
     public String getUnionid() {
         return unionid;

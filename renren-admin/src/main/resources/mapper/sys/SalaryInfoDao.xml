@@ -8,7 +8,8 @@
 	</select>
 
 	<select id="queryMoreAvg" resultType="string">
-		select count(*) from salary_info where salary >= (select avg(salary) from salary_info)
+-- 		select count(*) from salary_info where salary >= (select avg(salary) from salary_info)
+		select avg(salary) from salary_info
 	</select>
 
 	<select id="queryRanking" parameterType="io.renren.modules.salarytool.entity.SalaryInfo" resultType="string">
@@ -22,8 +23,26 @@
 		<if test="city != null and city != ''">
 			and city = #{city}
 		</if>
-		<if test="age != null and age != ''">
-			and age = #{age}
+		<if test="ageInterval == '1'">
+			and (age between 1 and 20)
+		</if>
+		<if test="ageInterval == '2'">
+			and (age between 21 and 25)
+		</if>
+		<if test="ageInterval == '3'">
+			and (age between 26 and 30)
+		</if>
+		<if test="ageInterval == '4'">
+			and (age between 31 and 35)
+		</if>
+		<if test="ageInterval == '5'">
+			and (age between 36 and 40)
+		</if>
+		<if test="ageInterval == '6'">
+			and (age between 41 and 50)
+		</if>
+		<if test="ageInterval == '7'">
+			and (age between 51 and 60)
 		</if>
 		<if test="gender != null and gender != ''">
 			and gender = #{gender}

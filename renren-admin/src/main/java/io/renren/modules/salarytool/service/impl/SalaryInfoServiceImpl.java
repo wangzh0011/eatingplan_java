@@ -10,6 +10,7 @@ package io.renren.modules.salarytool.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.renren.common.utils.TranslationUtil;
 import io.renren.modules.salarytool.dao.SalaryInfoDao;
 import io.renren.modules.salarytool.entity.SalaryInfo;
 import io.renren.modules.salarytool.service.SalaryInfoService;
@@ -42,11 +43,18 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 	@Override
 	public List<SalaryInfo> queryByCondition(SalaryInfo salaryInfo) {
 
+		String ageInterval = salaryInfo.getAgeInterval();
+		String ages = TranslationUtil.ageIntervalTranslation(ageInterval);
+		String age[] = new String[2];
+		if (ages != "") {
+			age = ages.split(",");
+		}
+
 		List<SalaryInfo> salaryInfoList = baseMapper.selectList(new QueryWrapper<SalaryInfo>()
 				.eq(StringUtils.isNotBlank(salaryInfo.getCountry()),"country",salaryInfo.getCountry())
 				.eq(StringUtils.isNotBlank(salaryInfo.getProvince()),"province",salaryInfo.getProvince())
 				.eq(StringUtils.isNotBlank(salaryInfo.getCity()),"city",salaryInfo.getCity())
-				.eq(StringUtils.isNotBlank(salaryInfo.getAge()),"age",salaryInfo.getAge())
+				.between(StringUtils.isNotBlank(ages),"age",age[0],age[1])
 				.eq(StringUtils.isNotBlank(salaryInfo.getGender()),"gender",salaryInfo.getGender())
 				.eq(StringUtils.isNotBlank(salaryInfo.getEducation()),"education",salaryInfo.getEducation())
 				.orderByAsc("salary+0")

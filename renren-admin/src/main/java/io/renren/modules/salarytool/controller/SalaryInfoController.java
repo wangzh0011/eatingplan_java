@@ -119,7 +119,7 @@ public class SalaryInfoController {
 
         List<SalaryInfo> salaryInfoList = salaryInfoService.queryByCondition(salaryInfo);
         int ranking = Integer.valueOf(salaryInfoService.queryRanking(salaryInfo));//排名
-        String avgNum = salaryInfoService.queryMoreAvg();
+        String avgSalary = salaryInfoService.queryMoreAvg();
         int num = salaryInfoList.size() / 20;//将数据分成20分  每份需要的数据个数
         List finalSalaryInfoList = new ArrayList<>();
 
@@ -157,7 +157,7 @@ public class SalaryInfoController {
                 .put("salaryInfoList",finalSalaryInfoList)
                 .put("morethan",ranking-1)
                 .put("lessthan",salaryInfoList.size()-ranking)
-                .put("avgNum",avgNum);
+                .put("avgSalary",avgSalary);
     }
 
     @RequestMapping("/getMySalaryInfo")
