@@ -36,8 +36,18 @@ public class SalaryInfo {
 
     private String lastLoginTime;
 
+    private String shareSign;
+
     @TableField(exist = false)//不映射数据库
     private String ageInterval;
+
+    public String getShareSign() {
+        return shareSign;
+    }
+
+    public void setShareSign(String shareSign) {
+        this.shareSign = shareSign;
+    }
 
     public String getAgeInterval() {
         return ageInterval;

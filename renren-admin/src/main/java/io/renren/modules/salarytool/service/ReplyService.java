@@ -14,6 +14,8 @@ public interface ReplyService extends IService<Reply> {
 
     List<Reply> queryAllByCid(Long cid);
 
+    Integer queryTotalNum(Long cid);
+
     /**
      * 保存配置信息
      */

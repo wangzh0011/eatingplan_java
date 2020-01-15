@@ -12,7 +12,9 @@ public interface CommentService extends IService<Comment> {
 
     List<Comment> queryByUid(Long uid);
 
-    List<Comment> queryAll();
+    List<Comment> queryAll(String openid);
+
+    List<Comment> queryByOpenid(String openid);
 
     /**
      * 保存配置信息

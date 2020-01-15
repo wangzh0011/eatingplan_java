@@ -38,20 +38,29 @@ public class CommentServiceImpl extends ServiceImpl<CommentDao, Comment> impleme
 	}
 
 	@Override
-	public List<Comment> queryAll() {
+	public List<Comment> queryAll(String openid) {
 		List<Comment> comment = baseMapper.selectList(new QueryWrapper<Comment>()
-				.orderByDesc("create_time"));
+				.notIn("openid",openid)
+				.orderByDesc("praise")
+				.last("limit 50"));
 
 		return comment;
 	}
 
+	@Override
+	public List<Comment> queryByOpenid(String openid) {
+		List<Comment> comment = baseMapper.selectList(new QueryWrapper<Comment>()
+				.eq("openid",openid)
+				.orderByDesc("praise"));
+
+		return comment;
+	}
 
 	@Override
 	public boolean save(Comment comment) {
 		baseMapper.insert(comment);
 		return true;
 	}
-
 
 	@Override
 	public void update(Comment comment) {

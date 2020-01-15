@@ -41,9 +41,16 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyDao, Reply> implements Re
 	public List<Reply> queryAllByCid(Long cid) {
 		List<Reply> comment = baseMapper.selectList(new QueryWrapper<Reply>()
 				.eq("cid",cid)
-				.orderByDesc("create_time"));
+				.orderByDesc("create_time")
+				.last("limit 100"));
 
 		return comment;
+	}
+
+	@Override
+	public Integer queryTotalNum(Long cid) {
+		Integer total = baseMapper.selectCount(new QueryWrapper<Reply>().eq("cid",cid));
+		return total;
 	}
 
 

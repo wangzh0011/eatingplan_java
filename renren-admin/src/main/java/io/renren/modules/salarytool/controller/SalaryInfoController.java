@@ -93,6 +93,7 @@ public class SalaryInfoController {
 //                return R.error("亲，每日只能设置一次哦^_^");
 //            }
             salaryInfo.setId(salaryInfo_db.getId());
+            salaryInfo.setSalary(salaryInfo_db.getSalary());
             salaryInfo.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             salaryInfoService.update(salaryInfo);
         }
@@ -157,7 +158,7 @@ public class SalaryInfoController {
                 .put("salaryInfoList",finalSalaryInfoList)
                 .put("morethan",ranking-1)
                 .put("lessthan",salaryInfoList.size()-ranking)
-                .put("avgSalary",avgSalary);
+                    .put("avgSalary",avgSalary);
     }
 
     @RequestMapping("/getMySalaryInfo")

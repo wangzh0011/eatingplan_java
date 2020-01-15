@@ -11,9 +11,39 @@ public class Reply {
 
     private Long cid;
 
+    private String nickName;
+
+    private String avatarUrl;
+
     private String reply;
 
     private String createTime;
+
+    private String openid;
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
 
     public Long getCid() {
         return cid;
