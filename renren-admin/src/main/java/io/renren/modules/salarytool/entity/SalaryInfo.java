@@ -8,7 +8,9 @@ public class SalaryInfo {
 
     private Long id;
 
-    private String salary = "0";//薪资
+    private String salary;//薪资
+
+    private String salaryTemp;
 
     private String age;
 
@@ -40,6 +42,14 @@ public class SalaryInfo {
 
     @TableField(exist = false)//不映射数据库
     private String ageInterval;
+
+    public String getSalaryTemp() {
+        return salaryTemp;
+    }
+
+    public void setSalaryTemp(String salaryTemp) {
+        this.salaryTemp = salaryTemp;
+    }
 
     public String getShareSign() {
         return shareSign;

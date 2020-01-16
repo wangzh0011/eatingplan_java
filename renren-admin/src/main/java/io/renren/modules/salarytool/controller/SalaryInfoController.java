@@ -93,8 +93,13 @@ public class SalaryInfoController {
 //                return R.error("亲，每日只能设置一次哦^_^");
 //            }
             salaryInfo.setId(salaryInfo_db.getId());
-            salaryInfo.setSalary(salaryInfo_db.getSalary());
             salaryInfo.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            if(salaryInfo.getSalary() != null) {
+                salaryInfo.setSalaryTemp(salaryInfo.getSalary());
+            }
+            if(salaryInfo_db.getSalary() != null) {
+                salaryInfo.setSalary(salaryInfo_db.getSalary());
+            }
             salaryInfoService.update(salaryInfo);
         }
 
@@ -114,13 +119,15 @@ public class SalaryInfoController {
             SalaryInfo salaryInfo_db = list.get(0);
             salaryInfo.setId(salaryInfo_db.getId());
             salaryInfo.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            salaryInfo.setSalary(salaryInfo_db.getSalary());
+            if(salaryInfo.getSalary() != null) {
+                salaryInfo.setSalaryTemp(salaryInfo.getSalary());
+            }
             salaryInfoService.update(salaryInfo);
         }
 
         List<SalaryInfo> salaryInfoList = salaryInfoService.queryByCondition(salaryInfo);
         int ranking = Integer.valueOf(salaryInfoService.queryRanking(salaryInfo));//排名
-        String avgSalary = salaryInfoService.queryMoreAvg();
+        String avgSalary = salaryInfoService.queryAvg(salaryInfo);
         int num = salaryInfoList.size() / 20;//将数据分成20分  每份需要的数据个数
         List finalSalaryInfoList = new ArrayList<>();
 
@@ -157,8 +164,8 @@ public class SalaryInfoController {
                 .put("rankingPercent",percent)
                 .put("salaryInfoList",finalSalaryInfoList)
                 .put("morethan",ranking-1)
-                .put("lessthan",salaryInfoList.size()-ranking)
-                    .put("avgSalary",avgSalary);
+                .put("lessthan",salaryInfoList.size()-ranking < 0 ? 0 : salaryInfoList.size()-ranking)
+                .put("avgSalary",avgSalary);
     }
 
     @RequestMapping("/getMySalaryInfo")

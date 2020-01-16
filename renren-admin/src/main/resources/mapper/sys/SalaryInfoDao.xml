@@ -3,8 +3,14 @@
 <mapper namespace="io.renren.modules.salarytool.dao.SalaryInfoDao">
 
 
-	<select id="queryAvg" resultType="string">
-		select avg(salary) from salary_info
+	<select id="queryAvg" resultType="string" parameterType="io.renren.modules.salarytool.entity.SalaryInfo">
+		select avg(salary) from salary_info where 1 = 1
+		<if test="province != null and province != ''">
+			and province = #{province}
+		</if>
+		<if test="city != null and city != ''">
+			and city = #{city}
+		</if>
 	</select>
 
 	<select id="queryMoreAvg" resultType="string">
@@ -51,7 +57,7 @@
 			and education = #{education}
 		</if>
 
-		 ORDER BY salary+0 asc) a where a.openid = #{openid}
+		 ORDER BY salary_temp+0 asc) a where a.openid = #{openid}
 	</select>
 	
 </mapper>
