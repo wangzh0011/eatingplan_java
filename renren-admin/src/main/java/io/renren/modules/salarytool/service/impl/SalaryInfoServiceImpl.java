@@ -57,7 +57,7 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 				.between(StringUtils.isNotBlank(ages),"age",age[0],age[1])
 				.eq(StringUtils.isNotBlank(salaryInfo.getGender()),"gender",salaryInfo.getGender())
 				.eq(StringUtils.isNotBlank(salaryInfo.getEducation()),"education",salaryInfo.getEducation())
-				.orderByAsc("salary_temp+0")
+				.orderByAsc("salary+0")
 		);
 		return salaryInfoList;
 	}
