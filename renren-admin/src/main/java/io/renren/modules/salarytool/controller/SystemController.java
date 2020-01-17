@@ -22,7 +22,7 @@ public class SystemController {
     public R getAccessToken(String url){
 
         String nonceStr = UUID.randomUUID().toString().replace("-","");
-        String timeStamp = String.valueOf(new Date().getTime());
+        String timeStamp = String.valueOf(new Date().getTime()/1000);
 
         SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();
         parameters.put("noncestr",nonceStr);

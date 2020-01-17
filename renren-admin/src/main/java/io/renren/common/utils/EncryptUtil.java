@@ -1,5 +1,7 @@
 package io.renren.common.utils;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -50,6 +52,15 @@ public class EncryptUtil {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    /**
+     * sha1加密
+     * @param input
+     * @return
+     */
+    public static String sha1(String input){
+        return DigestUtils.sha1Hex(input);
     }
 
 }

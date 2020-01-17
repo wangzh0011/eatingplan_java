@@ -65,8 +65,7 @@ public class SignatureUtil {
         }
 
         signTemp = signTemp.delete(signTemp.length()-1,signTemp.length());
-
-        //MD5加密,结果转换为大写字符
+        //sha1加密
         String sign = EncryptUtil.sha1(signTemp.toString().getBytes());
         return sign;
     }

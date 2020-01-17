@@ -39,16 +39,16 @@ public class AccessTokenTask implements ITask {
 		Map map = (Map) JSON.parse(result);
 		String access_token = (String) map.get("access_token");
 
-		String access_token_db = sysConfigService.getValue("access_token");
+//		String access_token_db = sysConfigService.getValue("access_token");
 
-		if(access_token_db == null) {
-			SysConfigEntity config = new SysConfigEntity();
-			config.setParamKey("access_token");
-			config.setParamValue(access_token);
-			sysConfigService.saveConfig(config);
-		} else {
+//		if(access_token_db == null) {
+//			SysConfigEntity config = new SysConfigEntity();
+//			config.setParamKey("access_token");
+//			config.setParamValue(access_token);
+//			sysConfigService.saveConfig(config);
+//		} else {
 			sysConfigService.updateValueByKey("access_token",access_token);
-		}
+//		}
 
 		logger.info("access_token:" + access_token);
 

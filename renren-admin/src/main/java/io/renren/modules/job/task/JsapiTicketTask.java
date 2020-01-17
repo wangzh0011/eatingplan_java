@@ -41,16 +41,16 @@ public class JsapiTicketTask implements ITask {
 		Map map = (Map) JSON.parse(result);
 		String ticket = (String) map.get("ticket");
 
-		String ticket_db = sysConfigService.getValue("ticket");
+//		String ticket_db = sysConfigService.getValue("ticket");
 
-		if(ticket_db == null) {
-			SysConfigEntity config = new SysConfigEntity();
-			config.setParamKey("ticket");
-			config.setParamValue(ticket);
-			sysConfigService.saveConfig(config);
-		} else {
+//		if(ticket_db == null) {
+//			SysConfigEntity config = new SysConfigEntity();
+//			config.setParamKey("ticket");
+//			config.setParamValue(ticket);
+//			sysConfigService.saveConfig(config);
+//		} else {
 			sysConfigService.updateValueByKey("ticket",ticket);
-		}
+//		}
 
 		logger.info("ticket:" + ticket);
 
