@@ -29,25 +29,25 @@
 		<if test="city != null and city != ''">
 			and city = #{city}
 		</if>
-		<if test="ageInterval == '1'">
+		<if test="ageInterval == '1'.toString()">
 			and (age between 1 and 20)
 		</if>
-		<if test="ageInterval == '2'">
+		<if test="ageInterval == '2'.toString()">
 			and (age between 21 and 25)
 		</if>
-		<if test="ageInterval == '3'">
+		<if test="ageInterval == '3'.toString()">
 			and (age between 26 and 30)
 		</if>
-		<if test="ageInterval == '4'">
+		<if test="ageInterval == '4'.toString()">
 			and (age between 31 and 35)
 		</if>
-		<if test="ageInterval == '5'">
+		<if test="ageInterval == '5'.toString()">
 			and (age between 36 and 40)
 		</if>
-		<if test="ageInterval == '6'">
+		<if test="ageInterval == '6'.toString()">
 			and (age between 41 and 50)
 		</if>
-		<if test="ageInterval == '7'">
+		<if test="ageInterval == '7'.toString()">
 			and (age between 51 and 60)
 		</if>
 		<if test="gender != null and gender != ''">

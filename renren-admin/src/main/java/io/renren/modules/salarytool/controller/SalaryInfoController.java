@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
 import io.renren.common.utils.RequestWeixinApi;
+import io.renren.common.utils.TranslationUtil;
 import io.renren.modules.salarytool.entity.SalaryInfo;
 import io.renren.modules.salarytool.service.SalaryInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +113,9 @@ public class SalaryInfoController {
     @RequestMapping("/getSalaryInfoByCondition")
     public R getSalaryInfo(SalaryInfo salaryInfo) {
 
+        //计算age区间
+        salaryInfo.setAgeInterval(TranslationUtil.ageTranslation(salaryInfo.getAge()));
+
         List<SalaryInfo> list = salaryInfoService.query(salaryInfo.getOpenid());
 
         //更新
@@ -126,6 +130,8 @@ public class SalaryInfoController {
         }
 
         List<SalaryInfo> salaryInfoList = salaryInfoService.queryByCondition(salaryInfo);
+
+
         int ranking = Integer.valueOf(salaryInfoService.queryRanking(salaryInfo));//排名
         String avgSalary = salaryInfoService.queryAvg(salaryInfo);
         int num = salaryInfoList.size() / 20;//将数据分成20分  每份需要的数据个数
