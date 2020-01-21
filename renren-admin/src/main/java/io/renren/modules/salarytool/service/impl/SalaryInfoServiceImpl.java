@@ -44,7 +44,10 @@ public class SalaryInfoServiceImpl extends ServiceImpl<SalaryInfoDao, SalaryInfo
 	public List<SalaryInfo> queryByCondition(SalaryInfo salaryInfo) {
 
 		String ageInterval = salaryInfo.getAge();
-		String ages = TranslationUtil.ageIntervalTranslation(ageInterval);
+		String ages = "";
+		if(ageInterval != null && !"".equals(ageInterval)) {
+			ages = TranslationUtil.ageIntervalTranslation(ageInterval);
+		}
 		String age[] = new String[2];
 		if (ages != "") {
 			age = ages.split(",");

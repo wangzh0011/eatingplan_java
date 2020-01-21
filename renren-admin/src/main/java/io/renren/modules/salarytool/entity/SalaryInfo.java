@@ -186,4 +186,16 @@ public class SalaryInfo {
     public void setAge(String age) {
         this.age = age;
     }
+
+    public SalaryInfo() {}
+
+    public SalaryInfo(String salary, String age, String gender, String province, String city, String education,String salaryTemp) {
+        this.salary = salary;
+        this.age = age;
+        this.gender = gender;
+        this.province = province;
+        this.city = city;
+        this.education = education;
+        this.salaryTemp = salaryTemp;
+    }
 }
